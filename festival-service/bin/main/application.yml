@@ -1,0 +1,22 @@
+server:
+  port: 8088
+spring:
+  application:
+    name: festival-service
+  datasource:
+    url: jdbc:mysql://localhost:3306/festival_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    username: root
+    password: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+jwt:
+  secret: your-256-bit-secret-key-for-jwt-token-generation-min-32-chars
+external:
+  tour-api:
+    base-url: http://apis.data.go.kr/B551011/KorService1
+    service-key: ${TOUR_API_KEY:your-api-key}

@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bookmark-service
+  namespace: msa-platform
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: bookmark-service
+  template:
+    metadata:
+      labels:
+        app: bookmark-service
+    spec:
+      containers:
+        - name: bookmark-service
+          image: msa-platform/bookmark-service:latest
+          ports:
+            - containerPort: 8083
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:mysql://mysql:3306/bookmark_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC"
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: msa-secrets
+                  key: MYSQL_PASSWORD
+          envFrom:
+            - configMapRef:
+                name: msa-config
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8083
+            initialDelaySeconds: 45
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "1Gi"
+              cpu: "500m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bookmark-service
+  namespace: msa-platform
+spec:
+  selector:
+    app: bookmark-service
+  ports:
+    - port: 8083

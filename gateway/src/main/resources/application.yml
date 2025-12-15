@@ -1,0 +1,64 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        - id: auth-service
+          uri: lb://auth-service
+          predicates:
+            - Path=/api/v1/auth/**
+
+        - id: user-service
+          uri: lb://user-service
+          predicates:
+            - Path=/api/v1/users/**
+
+        - id: bookmark-service
+          uri: lb://bookmark-service
+          predicates:
+            - Path=/api/v1/bookmarks/**
+
+        - id: schedule-service
+          uri: lb://schedule-service
+          predicates:
+            - Path=/api/v1/schedules/**
+
+        - id: ticketing-service
+          uri: lb://ticketing-service
+          predicates:
+            - Path=/api/v1/concerts/**, /api/v1/reservations/**, /api/v1/queue/**
+
+        - id: book-service
+          uri: lb://book-service
+          predicates:
+            - Path=/api/v1/books/**
+
+        - id: travel-service
+          uri: lb://travel-service
+          predicates:
+            - Path=/api/v1/itineraries/**, /api/v1/attractions/**
+
+        - id: festival-service
+          uri: lb://festival-service
+          predicates:
+            - Path=/api/v1/festivals/**
+
+        - id: wedding-service
+          uri: lb://wedding-service
+          predicates:
+            - Path=/api/v1/halls/**, /api/v1/dresses/**, /api/v1/makeup-shops/**, /api/v1/plans/**
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true

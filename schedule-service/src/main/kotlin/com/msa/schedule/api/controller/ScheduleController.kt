@@ -1,0 +1,108 @@
+package com.msa.schedule.api.controller
+
+import com.msa.common.response.ApiResponse
+import com.msa.schedule.application.*
+import com.msa.schedule.domain.entity.Schedule
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.tags.Tag
+import org.springframework.format.annotation.DateTimeFormat
+import org.springframework.security.core.annotation.AuthenticationPrincipal
+import org.springframework.web.bind.annotation.*
+import java.time.LocalDate
+
+@Tag(name = "Schedule", description = "일정 API")
+@RestController
+@RequestMapping("/api/v1/schedules")
+class ScheduleController(
+    private val scheduleService: ScheduleService
+) {
+
+    @Operation(summary = "일정 생성")
+    @PostMapping
+    fun createSchedule(
+        @AuthenticationPrincipal userId: Long,
+        @RequestBody request: ScheduleCreateRequest
+    ): ApiResponse<ScheduleResponse> {
+        val schedule = scheduleService.createSchedule(userId, request)
+        return ApiResponse.success(ScheduleResponse.from(schedule))
+    }
+
+    @Operation(summary = "월간 일정 조회")
+    @GetMapping("/monthly")
+    fun getMonthlySchedules(
+        @AuthenticationPrincipal userId: Long,
+        @RequestParam year: Int,
+        @RequestParam month: Int
+    ): ApiResponse<List<ScheduleResponse>> {
+        val schedules = scheduleService.getMonthlySchedules(userId, year, month)
+        return ApiResponse.success(schedules.map { ScheduleResponse.from(it) })
+    }
+
+    @Operation(summary = "일간 일정 조회")
+    @GetMapping("/daily")
+    fun getDailySchedules(
+        @AuthenticationPrincipal userId: Long,
+        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) date: LocalDate
+    ): ApiResponse<List<ScheduleResponse>> {
+        val schedules = scheduleService.getDailySchedules(userId, date)
+        return ApiResponse.success(schedules.map { ScheduleResponse.from(it) })
+    }
+
+    @Operation(summary = "일정 수정")
+    @PatchMapping("/{scheduleId}")
+    fun updateSchedule(
+        @AuthenticationPrincipal userId: Long,
+        @PathVariable scheduleId: Long,
+        @RequestBody request: ScheduleUpdateRequest
+    ): ApiResponse<ScheduleResponse> {
+        val schedule = scheduleService.updateSchedule(userId, scheduleId, request)
+        return ApiResponse.success(ScheduleResponse.from(schedule))
+    }
+
+    @Operation(summary = "일정 삭제")
+    @DeleteMapping("/{scheduleId}")
+    fun deleteSchedule(
+        @AuthenticationPrincipal userId: Long,
+        @PathVariable scheduleId: Long
+    ): ApiResponse<Unit> {
+        scheduleService.deleteSchedule(userId, scheduleId)
+        return ApiResponse.success()
+    }
+
+    // Internal API
+    @PostMapping("/internal")
+    fun createFromService(@RequestBody request: ServiceScheduleRequest): ApiResponse<ScheduleResponse> {
+        val schedule = scheduleService.createFromService(request)
+        return ApiResponse.success(ScheduleResponse.from(schedule))
+    }
+}
+
+data class ScheduleResponse(
+    val id: Long,
+    val serviceType: com.msa.common.enums.ServiceType,
+    val refId: Long?,
+    val title: String,
+    val description: String?,
+    val startDate: LocalDate,
+    val endDate: LocalDate?,
+    val startTime: java.time.LocalTime?,
+    val endTime: java.time.LocalTime?,
+    val allDay: Boolean,
+    val color: String?
+) {
+    companion object {
+        fun from(schedule: Schedule) = ScheduleResponse(
+            id = schedule.id,
+            serviceType = schedule.serviceType,
+            refId = schedule.refId,
+            title = schedule.title,
+            description = schedule.description,
+            startDate = schedule.startDate,
+            endDate = schedule.endDate,
+            startTime = schedule.startTime,
+            endTime = schedule.endTime,
+            allDay = schedule.allDay,
+            color = schedule.color
+        )
+    }
+}

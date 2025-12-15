@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: msa-config
+  namespace: msa-platform
+data:
+  EUREKA_SERVER: "http://discovery-server:8761/eureka/"
+  KAFKA_SERVERS: "kafka:9092"
+  REDIS_HOST: "redis"
+  REDIS_PORT: "6379"
+  JWT_SECRET: "your-256-bit-secret-key-for-jwt-token-generation-min-32-chars"

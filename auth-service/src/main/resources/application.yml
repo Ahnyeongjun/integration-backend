@@ -1,0 +1,63 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: auth-service
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/auth_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
+
+jwt:
+  secret: your-256-bit-secret-key-for-jwt-token-generation-min-32-chars
+  access-token-expiry: 3600000
+  refresh-token-expiry: 604800000
+
+oauth:
+  kakao:
+    client-id: ${KAKAO_CLIENT_ID:your-kakao-client-id}
+    client-secret: ${KAKAO_CLIENT_SECRET:your-kakao-client-secret}
+    redirect-uri: http://localhost:8080/api/v1/auth/oauth/kakao/callback
+  google:
+    client-id: ${GOOGLE_CLIENT_ID:your-google-client-id}
+    client-secret: ${GOOGLE_CLIENT_SECRET:your-google-client-secret}
+    redirect-uri: http://localhost:8080/api/v1/auth/oauth/google/callback
+  naver:
+    client-id: ${NAVER_CLIENT_ID:your-naver-client-id}
+    client-secret: ${NAVER_CLIENT_SECRET:your-naver-client-secret}
+    redirect-uri: http://localhost:8080/api/v1/auth/oauth/naver/callback
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
