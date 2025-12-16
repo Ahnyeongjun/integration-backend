@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: wedding-service
-          image: msa-platform/wedding-service:latest
+          image: 192.168.1.7:30500/wedding-service:latest
           ports:
             - containerPort: 8089
           env:

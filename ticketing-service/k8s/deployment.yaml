@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: ticketing-service
-          image: msa-platform/ticketing-service:latest
+          image: 192.168.1.7:30500/ticketing-service:latest
           ports:
             - containerPort: 8085
           env:

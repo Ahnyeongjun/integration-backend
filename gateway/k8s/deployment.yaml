@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: gateway
-          image: msa-platform/gateway:latest
+          image: 192.168.1.7:30500/gateway:latest
           ports:
             - containerPort: 8080
           envFrom:

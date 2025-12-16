@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: travel-service
-          image: msa-platform/travel-service:latest
+          image: 192.168.1.7:30500/travel-service:latest
           ports:
             - containerPort: 8087
           env:

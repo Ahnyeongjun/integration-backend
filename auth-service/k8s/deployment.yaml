@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: auth-service
-          image: msa-platform/auth-service:latest
+          image: 192.168.1.7:30500/auth-service:latest
           ports:
             - containerPort: 8081
           env:

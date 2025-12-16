@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: schedule-service
-          image: msa-platform/schedule-service:latest
+          image: 192.168.1.7:30500/schedule-service:latest
           ports:
             - containerPort: 8084
           env:

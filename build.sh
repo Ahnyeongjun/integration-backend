@@ -4,7 +4,10 @@ echo "=========================================="
 echo "  MSA Platform 전체 빌드"
 echo "=========================================="
 
-REGISTRY="${DOCKER_REGISTRY:-msa-platform}"
+# Nexus Docker Registry 설정
+NEXUS_HOST="${NEXUS_HOST:-192.168.1.7}"
+NEXUS_PORT="${NEXUS_PORT:-30500}"
+REGISTRY="${NEXUS_HOST}:${NEXUS_PORT}"
 TAG="${BUILD_TAG:-latest}"
 
 SERVICES=(
@@ -19,6 +22,11 @@ SERVICES=(
     "festival-service"
     "wedding-service"
 )
+
+echo ""
+echo "Registry: ${REGISTRY}"
+echo "Tag: ${TAG}"
+echo ""
 
 # 1. common-lib 빌드 & 배포
 echo "[0/${#SERVICES[@]}] common-lib 빌드..."
@@ -70,13 +78,22 @@ for svc in "${SERVICES[@]}"; do
 done
 
 echo ""
-read -p "Docker Registry에 푸시할까요? (y/N): " confirm
+read -p "Nexus Registry에 푸시할까요? (y/N): " confirm
 if [[ "$confirm" =~ ^[Yy]$ ]]; then
     echo ""
-    echo "푸시 중..."
+    echo "Nexus에 푸시 중..."
+    echo "(insecure registry 설정 필요: /etc/docker/daemon.json)"
+    echo ""
     for svc in "${SERVICES[@]}"; do
         echo "  - ${REGISTRY}/${svc}:${TAG}"
         docker push "${REGISTRY}/${svc}:${TAG}"
+        if [ $? -ne 0 ]; then
+            echo ""
+            echo "푸시 실패! insecure registry 설정을 확인하세요:"
+            echo '{"insecure-registries": ["'${REGISTRY}'"]}'
+            exit 1
+        fi
     done
+    echo ""
     echo "푸시 완료!"
 fi

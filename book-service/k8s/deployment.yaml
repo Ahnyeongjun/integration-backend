@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: book-service
-          image: msa-platform/book-service:latest
+          image: 192.168.1.7:30500/book-service:latest
           ports:
             - containerPort: 8086
           env:

@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: festival-service
-          image: msa-platform/festival-service:latest
+          image: 192.168.1.7:30500/festival-service:latest
           ports:
             - containerPort: 8088
           env:
