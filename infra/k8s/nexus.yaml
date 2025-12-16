@@ -42,17 +42,17 @@ spec:
               name: docker
           env:
             - name: INSTALL4J_ADD_VM_PARAMS
-              value: "-Xms1g -Xmx2g -XX:MaxDirectMemorySize=2g"
+              value: "-Xms512m -Xmx1g -XX:MaxDirectMemorySize=512m"
           volumeMounts:
             - name: nexus-data
               mountPath: /nexus-data
           resources:
             requests:
-              memory: "2Gi"
-              cpu: "500m"
+              memory: "1Gi"
+              cpu: "250m"
             limits:
-              memory: "4Gi"
-              cpu: "2000m"
+              memory: "1.5Gi"
+              cpu: "1000m"
           readinessProbe:
             httpGet:
               path: /
