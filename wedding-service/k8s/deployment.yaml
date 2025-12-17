@@ -21,6 +21,8 @@ spec:
           env:
             - name: SPRING_DATASOURCE_URL
               value: "jdbc:mysql://mysql:3306/wedding_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC"
+            - name: SPRING_DATASOURCE_USERNAME
+              value: "root"
             - name: SPRING_DATASOURCE_PASSWORD
               valueFrom:
                 secretKeyRef:
