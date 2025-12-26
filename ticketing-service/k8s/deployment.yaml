@@ -4,7 +4,7 @@ metadata:
   name: ticketing-service
   namespace: msa-platform
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: ticketing-service
@@ -44,11 +44,11 @@ spec:
             periodSeconds: 10
           resources:
             requests:
+              memory: "384Mi"
+              cpu: "200m"
+            limits:
               memory: "768Mi"
               cpu: "500m"
-            limits:
-              memory: "1.5Gi"
-              cpu: "1000m"
 ---
 apiVersion: v1
 kind: Service
