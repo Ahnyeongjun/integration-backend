@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: user-service
-          image: 192.168.1.7:30500/user-service:latest
+          image: 10.0.0.1:30500/user-service:latest
           ports:
             - containerPort: 8082
           env:
