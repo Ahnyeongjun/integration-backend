@@ -27,11 +27,7 @@ spec:
         app: nexus
     spec:
       nodeSelector:
-        kubernetes.io/hostname: test1
-      tolerations:
-        - key: "node-role.kubernetes.io/control-plane"
-          operator: "Exists"
-          effect: "NoSchedule"
+        kubernetes.io/hostname: jun
       containers:
         - name: nexus
           image: sonatype/nexus3:latest
