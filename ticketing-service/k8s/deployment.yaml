@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: ticketing-service
-          image: 10.0.0.1:30500/ticketing-service:latest
+          image: nexus.msa-platform.svc:5000/ticketing-service:latest
           ports:
             - containerPort: 8085
           env:

@@ -3,8 +3,8 @@ pipeline {
     
     environment {
         SERVICE_NAME = 'travel-service'
-        NEXUS_HOST = '192.168.1.7'
-        NEXUS_PORT = '30500'
+        NEXUS_HOST = 'nexus.msa-platform.svc'
+        NEXUS_PORT = '5000'
         DOCKER_REGISTRY = "${NEXUS_HOST}:${NEXUS_PORT}"
         DOCKER_IMAGE = "${DOCKER_REGISTRY}/${SERVICE_NAME}"
         K8S_NAMESPACE = 'msa-platform'

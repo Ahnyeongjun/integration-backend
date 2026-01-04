@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: book-service
-          image: 10.0.0.1:30500/book-service:latest
+          image: nexus.msa-platform.svc:5000/book-service:latest
           ports:
             - containerPort: 8086
           env:
