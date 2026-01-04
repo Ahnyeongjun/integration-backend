@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: bookmark-service
-          image: nexus.msa-platform.svc:5000/bookmark-service:latest
+          image: 100.86.217.36:30500/bookmark-service:latest
           ports:
             - containerPort: 8083
           env:

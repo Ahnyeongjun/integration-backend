@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: schedule-service
-          image: nexus.msa-platform.svc:5000/schedule-service:latest
+          image: 100.86.217.36:30500/schedule-service:latest
           ports:
             - containerPort: 8084
           env:

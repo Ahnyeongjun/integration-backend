@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: user-service
-          image: nexus.msa-platform.svc:5000/user-service:latest
+          image: 100.86.217.36:30500/user-service:latest
           ports:
             - containerPort: 8082
           env:
