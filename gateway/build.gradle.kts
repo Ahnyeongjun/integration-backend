@@ -35,6 +35,9 @@ dependencies {
     implementation("io.jsonwebtoken:jjwt-api:0.12.6")
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.6")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.6")
+
+    // Swagger (WebFlux for reactive gateway)
+    implementation("org.springdoc:springdoc-openapi-starter-webflux-ui:2.8.0")
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {

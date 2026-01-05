@@ -55,6 +55,97 @@ spring:
           predicates:
             - Path=/api/v1/halls/**, /api/v1/dresses/**, /api/v1/makeup-shops/**, /api/v1/plans/**
 
+        # Swagger API Docs 라우팅
+        - id: auth-service-docs
+          uri: http://auth-service:8081
+          predicates:
+            - Path=/v3/api-docs/auth
+          filters:
+            - RewritePath=/v3/api-docs/auth, /v3/api-docs
+
+        - id: user-service-docs
+          uri: http://user-service:8082
+          predicates:
+            - Path=/v3/api-docs/user
+          filters:
+            - RewritePath=/v3/api-docs/user, /v3/api-docs
+
+        - id: wedding-service-docs
+          uri: http://wedding-service:8089
+          predicates:
+            - Path=/v3/api-docs/wedding
+          filters:
+            - RewritePath=/v3/api-docs/wedding, /v3/api-docs
+
+        - id: schedule-service-docs
+          uri: http://schedule-service:8084
+          predicates:
+            - Path=/v3/api-docs/schedule
+          filters:
+            - RewritePath=/v3/api-docs/schedule, /v3/api-docs
+
+        - id: bookmark-service-docs
+          uri: http://bookmark-service:8083
+          predicates:
+            - Path=/v3/api-docs/bookmark
+          filters:
+            - RewritePath=/v3/api-docs/bookmark, /v3/api-docs
+
+        - id: festival-service-docs
+          uri: http://festival-service:8088
+          predicates:
+            - Path=/v3/api-docs/festival
+          filters:
+            - RewritePath=/v3/api-docs/festival, /v3/api-docs
+
+        - id: travel-service-docs
+          uri: http://travel-service:8087
+          predicates:
+            - Path=/v3/api-docs/travel
+          filters:
+            - RewritePath=/v3/api-docs/travel, /v3/api-docs
+
+        - id: ticketing-service-docs
+          uri: http://ticketing-service:8085
+          predicates:
+            - Path=/v3/api-docs/ticketing
+          filters:
+            - RewritePath=/v3/api-docs/ticketing, /v3/api-docs
+
+        - id: book-service-docs
+          uri: http://book-service:8086
+          predicates:
+            - Path=/v3/api-docs/book
+          filters:
+            - RewritePath=/v3/api-docs/book, /v3/api-docs
+
 eureka:
   client:
     enabled: false
+
+# Swagger 통합 설정
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    urls:
+      - name: auth-service
+        url: /v3/api-docs/auth
+      - name: user-service
+        url: /v3/api-docs/user
+      - name: wedding-service
+        url: /v3/api-docs/wedding
+      - name: schedule-service
+        url: /v3/api-docs/schedule
+      - name: bookmark-service
+        url: /v3/api-docs/bookmark
+      - name: festival-service
+        url: /v3/api-docs/festival
+      - name: travel-service
+        url: /v3/api-docs/travel
+      - name: ticketing-service
+        url: /v3/api-docs/ticketing
+      - name: book-service
+        url: /v3/api-docs/book
