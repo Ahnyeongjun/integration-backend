@@ -49,6 +49,8 @@ spec:
       containers:
         - name: kafka
           image: confluentinc/cp-kafka:7.5.0
+          command: ["/bin/bash", "-c"]
+          args: ["kafka-server-start /etc/kafka/server.properties"]
           ports:
             - containerPort: 9092
           env:
