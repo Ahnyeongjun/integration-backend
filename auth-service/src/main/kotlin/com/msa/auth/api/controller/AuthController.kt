@@ -1,6 +1,7 @@
 package com.msa.auth.api.controller
 
 import com.msa.auth.application.AuthService
+import com.msa.auth.application.EmailVerificationService
 import com.msa.auth.application.TokenResponse
 import com.msa.common.response.ApiResponse
 import io.swagger.v3.oas.annotations.Operation
@@ -16,7 +17,8 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/api/v1/auth")
 class AuthController(
-    private val authService: AuthService
+    private val authService: AuthService,
+    private val emailVerificationService: EmailVerificationService
 ) {
 
     @Operation(summary = "이메일 회원가입")
@@ -82,6 +84,67 @@ class AuthController(
         authService.logout(userId)
         return ApiResponse.success()
     }
+
+    // ========== 이메일 인증 API ==========
+
+    @Operation(summary = "회원가입용 이메일 인증 코드 발송")
+    @PostMapping("/email/send-code")
+    fun sendSignupVerificationCode(
+        @Valid @RequestBody request: EmailRequest
+    ): ApiResponse<EmailSentResponse> {
+        emailVerificationService.sendSignupVerificationCode(request.email)
+        return ApiResponse.success(EmailSentResponse(
+            message = "인증 코드가 발송되었습니다",
+            expiresInSeconds = 300
+        ))
+    }
+
+    @Operation(summary = "회원가입용 이메일 인증 코드 검증")
+    @PostMapping("/email/verify")
+    fun verifySignupCode(
+        @Valid @RequestBody request: VerifyCodeRequest
+    ): ApiResponse<VerificationResponse> {
+        val token = emailVerificationService.verifySignupCode(request.email, request.code)
+        return ApiResponse.success(VerificationResponse(
+            verified = true,
+            token = token,
+            message = "이메일 인증이 완료되었습니다"
+        ))
+    }
+
+    @Operation(summary = "비밀번호 재설정용 이메일 인증 코드 발송")
+    @PostMapping("/password/send-code")
+    fun sendPasswordResetCode(
+        @Valid @RequestBody request: EmailRequest
+    ): ApiResponse<EmailSentResponse> {
+        emailVerificationService.sendPasswordResetCode(request.email)
+        return ApiResponse.success(EmailSentResponse(
+            message = "비밀번호 재설정 코드가 발송되었습니다",
+            expiresInSeconds = 300
+        ))
+    }
+
+    @Operation(summary = "비밀번호 재설정 코드 검증")
+    @PostMapping("/password/verify-code")
+    fun verifyPasswordResetCode(
+        @Valid @RequestBody request: VerifyCodeRequest
+    ): ApiResponse<VerificationResponse> {
+        val token = emailVerificationService.verifyPasswordResetCode(request.email, request.code)
+        return ApiResponse.success(VerificationResponse(
+            verified = true,
+            token = token,
+            message = "인증이 완료되었습니다. 새 비밀번호를 설정해주세요."
+        ))
+    }
+
+    @Operation(summary = "비밀번호 재설정")
+    @PostMapping("/password/reset")
+    fun resetPassword(
+        @Valid @RequestBody request: ResetPasswordRequest
+    ): ApiResponse<MessageResponse> {
+        emailVerificationService.resetPassword(request.token, request.newPassword)
+        return ApiResponse.success(MessageResponse("비밀번호가 변경되었습니다"))
+    }
 }
 
 data class SignupRequest(
@@ -117,4 +180,45 @@ data class CompleteSignupRequest(
 
 data class RefreshTokenRequest(
     val refreshToken: String
+)
+
+// 이메일 인증 관련 DTOs
+data class EmailRequest(
+    @field:NotBlank(message = "이메일은 필수입니다")
+    @field:Email(message = "올바른 이메일 형식이 아닙니다")
+    val email: String
+)
+
+data class VerifyCodeRequest(
+    @field:NotBlank(message = "이메일은 필수입니다")
+    @field:Email(message = "올바른 이메일 형식이 아닙니다")
+    val email: String,
+
+    @field:NotBlank(message = "인증 코드는 필수입니다")
+    @field:Size(min = 6, max = 6, message = "인증 코드는 6자리입니다")
+    val code: String
+)
+
+data class ResetPasswordRequest(
+    @field:NotBlank(message = "토큰은 필수입니다")
+    val token: String,
+
+    @field:NotBlank(message = "비밀번호는 필수입니다")
+    @field:Size(min = 8, max = 20, message = "비밀번호는 8~20자여야 합니다")
+    val newPassword: String
+)
+
+data class EmailSentResponse(
+    val message: String,
+    val expiresInSeconds: Int
+)
+
+data class VerificationResponse(
+    val verified: Boolean,
+    val token: String,
+    val message: String
+)
+
+data class MessageResponse(
+    val message: String
 )

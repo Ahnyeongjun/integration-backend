@@ -73,8 +73,11 @@ object PublicPaths {
     val AUTH = arrayOf(
         "/api/v1/auth/login",
         "/api/v1/auth/signup",
+        "/api/v1/auth/signup/complete",
         "/api/v1/auth/oauth/**",
-        "/api/v1/auth/refresh"
+        "/api/v1/auth/refresh",
+        "/api/v1/auth/email/**",
+        "/api/v1/auth/password/**"
     )
 
     val ALL_PUBLIC = SWAGGER + ACTUATOR + AUTH

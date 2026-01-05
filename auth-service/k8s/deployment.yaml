@@ -30,6 +30,16 @@ spec:
                 secretKeyRef:
                   name: msa-secrets
                   key: MYSQL_PASSWORD
+            - name: MAIL_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: msa-secrets
+                  key: MAIL_USERNAME
+            - name: MAIL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: msa-secrets
+                  key: MAIL_PASSWORD
           envFrom:
             - configMapRef:
                 name: msa-config

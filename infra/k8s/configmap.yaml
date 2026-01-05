@@ -8,3 +8,6 @@ data:
   SPRING_DATA_REDIS_HOST: "redis"
   SPRING_DATA_REDIS_PORT: "6379"
   JWT_SECRET: "your-256-bit-secret-key-for-jwt-token-generation-min-32-chars"
+  # Gmail SMTP 설정
+  MAIL_HOST: "smtp.gmail.com"
+  MAIL_PORT: "587"
