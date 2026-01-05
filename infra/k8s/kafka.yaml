@@ -91,7 +91,6 @@ spec:
       containers:
         - name: kafka
           image: confluentinc/cp-kafka:7.5.0
-          command: ["sleep", "infinity"]
           ports:
             - containerPort: 9092
           env:
