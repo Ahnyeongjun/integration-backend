@@ -3,7 +3,7 @@ pipeline {
     
     environment {
         SERVICE_NAME = 'bookmark-service'
-        NEXUS_HOST = '100.86.217.36'
+        NEXUS_HOST = '100.67.243.29'
         NEXUS_PORT = '30500'
         DOCKER_REGISTRY = "${NEXUS_HOST}:${NEXUS_PORT}"
         DOCKER_IMAGE = "${DOCKER_REGISTRY}/${SERVICE_NAME}"

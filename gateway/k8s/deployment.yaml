@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: gateway
-          image: 100.86.217.36:30500/gateway:latest
+          image: 100.67.243.29:30500/gateway:latest
           ports:
             - containerPort: 8080
           envFrom:

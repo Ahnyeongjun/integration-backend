@@ -5,7 +5,7 @@ echo "  MSA Platform Docker 이미지 푸시"
 echo "=========================================="
 
 # Nexus Docker Registry 설정
-NEXUS_HOST="${NEXUS_HOST:-100.86.217.36}"
+NEXUS_HOST="${NEXUS_HOST:-100.67.243.29}"
 NEXUS_PORT="${NEXUS_PORT:-30500}"
 REGISTRY="${NEXUS_HOST}:${NEXUS_PORT}"
 TAG="${BUILD_TAG:-latest}"

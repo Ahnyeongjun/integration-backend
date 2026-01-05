@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: festival-service
-          image: 100.86.217.36:30500/festival-service:latest
+          image: 100.67.243.29:30500/festival-service:latest
           ports:
             - containerPort: 8088
           env:

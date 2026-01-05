@@ -5,7 +5,7 @@ echo "  MSA Platform 멀티 아키텍처 빌드"
 echo "=========================================="
 
 # Nexus Docker Registry 설정
-NEXUS_HOST="${NEXUS_HOST:-100.86.217.36}"
+NEXUS_HOST="${NEXUS_HOST:-100.67.243.29}"
 NEXUS_PORT="${NEXUS_PORT:-30500}"
 REGISTRY="${NEXUS_HOST}:${NEXUS_PORT}"
 TAG="${BUILD_TAG:-latest}"
