@@ -1,6 +1,7 @@
 package com.msa.common.security
 
 import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
@@ -30,7 +31,13 @@ abstract class BaseSecurityConfig {
                 UsernamePasswordAuthenticationFilter::class.java
             )
     }
+}
 
+/**
+ * PasswordEncoder 설정 (별도 Config로 분리)
+ */
+@Configuration
+class PasswordEncoderConfig {
     @Bean
     fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder()
 }
