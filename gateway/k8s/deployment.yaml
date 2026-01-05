@@ -42,12 +42,13 @@ metadata:
   name: gateway
   namespace: msa-platform
 spec:
-  type: LoadBalancer
+  type: NodePort
   selector:
     app: gateway
   ports:
     - port: 80
       targetPort: 8080
+      nodePort: 30000
 ---
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
