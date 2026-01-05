@@ -7,6 +7,7 @@ import com.msa.bookmark.domain.entity.Bookmark
 import com.msa.bookmark.domain.entity.TargetType
 import com.msa.common.enums.ServiceType
 import com.msa.common.response.ApiResponse
+import com.msa.common.security.UserPrincipal
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.data.domain.Page
@@ -25,35 +26,35 @@ class BookmarkController(
     @Operation(summary = "북마크 토글")
     @PostMapping
     fun toggleBookmark(
-        @AuthenticationPrincipal userId: Long,
+        @AuthenticationPrincipal principal: UserPrincipal,
         @RequestBody request: BookmarkRequest
     ): ApiResponse<BookmarkResponse> {
-        return ApiResponse.success(bookmarkService.toggleBookmark(userId, request))
+        return ApiResponse.success(bookmarkService.toggleBookmark(principal.userId, request))
     }
 
     @Operation(summary = "내 북마크 목록")
-    @GetMapping
+    @GetMapping("/my")
     fun getMyBookmarks(
-        @AuthenticationPrincipal userId: Long,
+        @AuthenticationPrincipal principal: UserPrincipal,
         @RequestParam(required = false) serviceType: ServiceType?,
         @PageableDefault(size = 20) pageable: Pageable
     ): ApiResponse<Page<BookmarkDto>> {
-        val bookmarks = bookmarkService.getMyBookmarks(userId, serviceType, pageable)
+        val bookmarks = bookmarkService.getMyBookmarks(principal.userId, serviceType, pageable)
         return ApiResponse.success(bookmarks.map { BookmarkDto.from(it) })
     }
 
-    @Operation(summary = "북마크 여부 확인")
+    @Operation(summary = "북마크 여부 확인 (로그인 필수)")
     @GetMapping("/check")
     fun isBookmarked(
-        @AuthenticationPrincipal userId: Long,
+        @AuthenticationPrincipal principal: UserPrincipal,
         @RequestParam serviceType: ServiceType,
         @RequestParam targetType: TargetType,
         @RequestParam targetId: Long
     ): ApiResponse<Boolean> {
-        return ApiResponse.success(bookmarkService.isBookmarked(userId, serviceType, targetType, targetId))
+        return ApiResponse.success(bookmarkService.isBookmarked(principal.userId, serviceType, targetType, targetId))
     }
 
-    @Operation(summary = "북마크 수 조회")
+    @Operation(summary = "북마크 수 조회 (공개)")
     @GetMapping("/count")
     fun getBookmarkCount(
         @RequestParam serviceType: ServiceType,

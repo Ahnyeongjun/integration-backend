@@ -42,16 +42,13 @@ jwt:
 oauth:
   kakao:
     client-id: ${KAKAO_CLIENT_ID:your-kakao-client-id}
-    client-secret: ${KAKAO_CLIENT_SECRET:your-kakao-client-secret}
-    redirect-uri: http://localhost:8080/api/v1/auth/oauth/kakao/callback
+    client-secret: ${KAKAO_CLIENT_SECRET:}
   google:
     client-id: ${GOOGLE_CLIENT_ID:your-google-client-id}
     client-secret: ${GOOGLE_CLIENT_SECRET:your-google-client-secret}
-    redirect-uri: http://localhost:8080/api/v1/auth/oauth/google/callback
   naver:
     client-id: ${NAVER_CLIENT_ID:your-naver-client-id}
     client-secret: ${NAVER_CLIENT_SECRET:your-naver-client-secret}
-    redirect-uri: http://localhost:8080/api/v1/auth/oauth/naver/callback
 
 springdoc:
   api-docs:

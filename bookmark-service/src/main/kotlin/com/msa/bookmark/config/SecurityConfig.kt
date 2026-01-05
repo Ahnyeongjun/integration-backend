@@ -1,39 +1,37 @@
-package com.msa.auth.config
+package com.msa.bookmark.config
 
 import com.msa.common.security.BaseSecurityConfig
-import com.msa.common.security.JwtTokenProvider
 import com.msa.common.security.PublicPaths
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.HttpMethod
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.web.SecurityFilterChain
 
 @Configuration
 @EnableWebSecurity
-class SecurityConfig(
-    @Value("\${jwt.secret}") private val jwtSecret: String,
-    @Value("\${jwt.access-token-expiry:3600000}") private val accessTokenExpiry: Long,
-    @Value("\${jwt.refresh-token-expiry:604800000}") private val refreshTokenExpiry: Long
-) : BaseSecurityConfig() {
-
-    @Bean
-    fun jwtTokenProvider(): JwtTokenProvider {
-        return JwtTokenProvider(jwtSecret, accessTokenExpiry, refreshTokenExpiry)
-    }
+class SecurityConfig : BaseSecurityConfig() {
 
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         return configure(http)
             .authorizeHttpRequests { auth ->
                 auth
-                    // Auth API는 대부분 공개
-                    .requestMatchers(*PublicPaths.AUTH).permitAll()
+                    // Swagger, Actuator
                     .requestMatchers(*PublicPaths.SWAGGER).permitAll()
                     .requestMatchers(*PublicPaths.ACTUATOR).permitAll()
-                    // 로그아웃은 인증 필요
-                    .requestMatchers("/api/v1/auth/logout").authenticated()
+
+                    // 공개 API
+                    .requestMatchers(HttpMethod.GET, "/api/v1/bookmarks/count").permitAll()
+
+                    // 인증 필수 API
+                    .requestMatchers(HttpMethod.GET, "/api/v1/bookmarks/my").authenticated()
+                    .requestMatchers(HttpMethod.GET, "/api/v1/bookmarks/check").authenticated()
+                    .requestMatchers(HttpMethod.POST, "/api/v1/bookmarks/**").authenticated()
+                    .requestMatchers(HttpMethod.PUT, "/api/v1/bookmarks/**").authenticated()
+                    .requestMatchers(HttpMethod.DELETE, "/api/v1/bookmarks/**").authenticated()
+
                     .anyRequest().permitAll()
             }
             .build()

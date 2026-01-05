@@ -40,3 +40,11 @@ class ConflictException(
     message = message,
     status = HttpStatus.CONFLICT
 )
+
+class BadRequestException(
+    message: String
+) : BusinessException(
+    code = "BAD_REQUEST",
+    message = message,
+    status = HttpStatus.BAD_REQUEST
+)
