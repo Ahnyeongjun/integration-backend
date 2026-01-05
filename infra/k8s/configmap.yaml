@@ -4,7 +4,7 @@ metadata:
   name: msa-config
   namespace: msa-platform
 data:
-  KAFKA_SERVERS: "kafka:9092"
-  REDIS_HOST: "redis"
-  REDIS_PORT: "6379"
+  SPRING_KAFKA_BOOTSTRAP_SERVERS: "kafka:9092"
+  SPRING_DATA_REDIS_HOST: "redis"
+  SPRING_DATA_REDIS_PORT: "6379"
   JWT_SECRET: "your-256-bit-secret-key-for-jwt-token-generation-min-32-chars"
