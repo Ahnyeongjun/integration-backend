@@ -55,7 +55,7 @@ spec:
             - containerPort: 50000
           env:
             - name: JAVA_OPTS
-              value: "-Xmx2g"
+              value: "-Xmx512m"
           volumeMounts:
             - name: jenkins-home
               mountPath: /var/jenkins_home
@@ -63,11 +63,11 @@ spec:
               mountPath: /var/run/docker.sock
           resources:
             requests:
-              memory: "2Gi"
-              cpu: "1000m"
+              memory: "512Mi"
+              cpu: "200m"
             limits:
-              memory: "4Gi"
-              cpu: "2000m"
+              memory: "1Gi"
+              cpu: "500m"
       volumes:
         - name: jenkins-home
           persistentVolumeClaim:
