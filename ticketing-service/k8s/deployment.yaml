@@ -33,17 +33,6 @@ spec:
           envFrom:
             - configMapRef:
                 name: msa-config
-          readinessProbe:
-            httpGet:
-              path: /actuator/health
-              port: 8085
-            initialDelaySeconds: 45
-          livenessProbe:
-            httpGet:
-              path: /actuator/health
-              port: 8085
-            initialDelaySeconds: 60
-            periodSeconds: 10
           resources:
             requests:
               memory: "384Mi"
