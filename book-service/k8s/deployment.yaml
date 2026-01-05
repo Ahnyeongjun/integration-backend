@@ -13,6 +13,8 @@ spec:
       labels:
         app: book-service
     spec:
+      nodeSelector:
+        kubernetes.io/hostname: jun
       containers:
         - name: book-service
           image: 100.67.243.29:30500/book-service:latest

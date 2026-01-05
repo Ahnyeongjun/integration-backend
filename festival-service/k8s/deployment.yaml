@@ -13,6 +13,8 @@ spec:
       labels:
         app: festival-service
     spec:
+      nodeSelector:
+        kubernetes.io/hostname: jun
       containers:
         - name: festival-service
           image: 100.67.243.29:30500/festival-service:latest

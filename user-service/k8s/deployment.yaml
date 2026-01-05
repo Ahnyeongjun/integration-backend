@@ -13,6 +13,8 @@ spec:
       labels:
         app: user-service
     spec:
+      nodeSelector:
+        kubernetes.io/hostname: jun
       containers:
         - name: user-service
           image: 100.67.243.29:30500/user-service:latest

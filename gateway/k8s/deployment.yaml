@@ -13,6 +13,8 @@ spec:
       labels:
         app: gateway
     spec:
+      nodeSelector:
+        kubernetes.io/hostname: jun
       containers:
         - name: gateway
           image: 100.67.243.29:30500/gateway:latest

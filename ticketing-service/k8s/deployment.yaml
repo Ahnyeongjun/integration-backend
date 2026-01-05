@@ -13,6 +13,8 @@ spec:
       labels:
         app: ticketing-service
     spec:
+      nodeSelector:
+        kubernetes.io/hostname: jun
       containers:
         - name: ticketing-service
           image: 100.67.243.29:30500/ticketing-service:latest

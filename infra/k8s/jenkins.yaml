@@ -45,6 +45,8 @@ spec:
         app: jenkins
     spec:
       serviceAccountName: jenkins
+      nodeSelector:
+        kubernetes.io/hostname: jun
       containers:
         - name: jenkins
           image: jenkins/jenkins:lts
