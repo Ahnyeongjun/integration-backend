@@ -6,59 +6,52 @@ spring:
     name: gateway
   cloud:
     gateway:
-      discovery:
-        locator:
-          enabled: true
-          lower-case-service-id: true
       routes:
         - id: auth-service
-          uri: lb://auth-service
+          uri: http://auth-service:8081
           predicates:
             - Path=/api/v1/auth/**
 
         - id: user-service
-          uri: lb://user-service
+          uri: http://user-service:8082
           predicates:
             - Path=/api/v1/users/**
 
         - id: bookmark-service
-          uri: lb://bookmark-service
+          uri: http://bookmark-service:8083
           predicates:
             - Path=/api/v1/bookmarks/**
 
         - id: schedule-service
-          uri: lb://schedule-service
+          uri: http://schedule-service:8084
           predicates:
             - Path=/api/v1/schedules/**
 
         - id: ticketing-service
-          uri: lb://ticketing-service
+          uri: http://ticketing-service:8085
           predicates:
             - Path=/api/v1/concerts/**, /api/v1/reservations/**, /api/v1/queue/**
 
         - id: book-service
-          uri: lb://book-service
+          uri: http://book-service:8086
           predicates:
             - Path=/api/v1/books/**
 
         - id: travel-service
-          uri: lb://travel-service
+          uri: http://travel-service:8087
           predicates:
             - Path=/api/v1/itineraries/**, /api/v1/attractions/**
 
         - id: festival-service
-          uri: lb://festival-service
+          uri: http://festival-service:8088
           predicates:
             - Path=/api/v1/festivals/**
 
         - id: wedding-service
-          uri: lb://wedding-service
+          uri: http://wedding-service:8089
           predicates:
             - Path=/api/v1/halls/**, /api/v1/dresses/**, /api/v1/makeup-shops/**, /api/v1/plans/**
 
 eureka:
   client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka/
-  instance:
-    prefer-ip-address: true
+    enabled: false

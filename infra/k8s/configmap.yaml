@@ -4,7 +4,6 @@ metadata:
   name: msa-config
   namespace: msa-platform
 data:
-  EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://discovery-server:8761/eureka/"
   KAFKA_SERVERS: "kafka:9092"
   REDIS_HOST: "redis"
   REDIS_PORT: "6379"

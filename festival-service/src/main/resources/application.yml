@@ -12,8 +12,7 @@ spring:
       ddl-auto: update
 eureka:
   client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka/
+    enabled: false
 jwt:
   secret: your-256-bit-secret-key-for-jwt-token-generation-min-32-chars
 external:
