@@ -42,8 +42,32 @@ class ScheduleService(
     }
 
     @Transactional(readOnly = true)
+    fun getWeeklySchedules(userId: Long, startDate: LocalDate): List<Schedule> {
+        val endDate = startDate.plusDays(6)
+        return scheduleRepository.findByUserIdAndDateRange(userId, startDate, endDate)
+    }
+
+    @Transactional(readOnly = true)
     fun getDailySchedules(userId: Long, date: LocalDate): List<Schedule> {
         return scheduleRepository.findByUserIdAndStartDate(userId, date)
+    }
+
+    @Transactional(readOnly = true)
+    fun getSchedule(userId: Long, scheduleId: Long): Schedule {
+        val schedule = scheduleRepository.findById(scheduleId)
+            .orElseThrow { NotFoundException("Schedule", scheduleId) }
+
+        if (schedule.userId != userId) {
+            throw ForbiddenException("Cannot access this schedule")
+        }
+        return schedule
+    }
+
+    @Transactional(readOnly = true)
+    fun getUpcomingSchedules(userId: Long): List<Schedule> {
+        val today = LocalDate.now()
+        val nextWeek = today.plusDays(7)
+        return scheduleRepository.findByUserIdAndDateRange(userId, today, nextWeek)
     }
 
     fun updateSchedule(userId: Long, scheduleId: Long, request: ScheduleUpdateRequest): Schedule {

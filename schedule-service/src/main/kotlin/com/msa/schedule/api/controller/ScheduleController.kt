@@ -38,6 +38,16 @@ class ScheduleController(
         return ApiResponse.success(schedules.map { ScheduleResponse.from(it) })
     }
 
+    @Operation(summary = "주간 일정 조회")
+    @GetMapping("/weekly")
+    fun getWeeklySchedules(
+        @AuthenticationPrincipal userId: Long,
+        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) startDate: LocalDate
+    ): ApiResponse<List<ScheduleResponse>> {
+        val schedules = scheduleService.getWeeklySchedules(userId, startDate)
+        return ApiResponse.success(schedules.map { ScheduleResponse.from(it) })
+    }
+
     @Operation(summary = "일간 일정 조회")
     @GetMapping("/daily")
     fun getDailySchedules(
@@ -45,6 +55,25 @@ class ScheduleController(
         @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) date: LocalDate
     ): ApiResponse<List<ScheduleResponse>> {
         val schedules = scheduleService.getDailySchedules(userId, date)
+        return ApiResponse.success(schedules.map { ScheduleResponse.from(it) })
+    }
+
+    @Operation(summary = "일정 상세")
+    @GetMapping("/{scheduleId}")
+    fun getSchedule(
+        @AuthenticationPrincipal userId: Long,
+        @PathVariable scheduleId: Long
+    ): ApiResponse<ScheduleResponse> {
+        val schedule = scheduleService.getSchedule(userId, scheduleId)
+        return ApiResponse.success(ScheduleResponse.from(schedule))
+    }
+
+    @Operation(summary = "다가오는 일정 알림")
+    @GetMapping("/notifications")
+    fun getNotifications(
+        @AuthenticationPrincipal userId: Long
+    ): ApiResponse<List<ScheduleResponse>> {
+        val schedules = scheduleService.getUpcomingSchedules(userId)
         return ApiResponse.success(schedules.map { ScheduleResponse.from(it) })
     }
 
