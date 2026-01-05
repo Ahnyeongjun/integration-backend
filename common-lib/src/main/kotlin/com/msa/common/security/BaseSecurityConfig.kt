@@ -12,26 +12,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 /**
  * 기본 Security 설정
  * 각 서비스에서 상속받아 사용하거나 참고
- *
- * 사용법:
- * ```
- * @Configuration
- * @EnableWebSecurity
- * class SecurityConfig : BaseSecurityConfig() {
- *
- *     @Bean
- *     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
- *         return configure(http)
- *             .authorizeHttpRequests { auth ->
- *                 auth
- *                     .requestMatchers(HttpMethod.GET, "/api/v1/books/**").permitAll()
- *                     .requestMatchers(HttpMethod.POST, "/api/v1/books/**").authenticated()
- *                     .anyRequest().permitAll()
- *             }
- *             .build()
- *     }
- * }
- * ```
  */
 @EnableMethodSecurity(prePostEnabled = true)
 abstract class BaseSecurityConfig {
