@@ -80,3 +80,51 @@ data class BookmarkDto(
         )
     }
 }
+
+// Internal API Controller for service-to-service communication
+@Tag(name = "Bookmark Internal", description = "북마크 내부 API (서비스 간 통신)")
+@RestController
+@RequestMapping("/api/v1/bookmarks/internal")
+class BookmarkInternalController(
+    private val bookmarkService: BookmarkService
+) {
+    @Operation(summary = "북마크 여부 확인 (내부용)")
+    @GetMapping("/check")
+    fun isBookmarked(
+        @RequestParam userId: Long,
+        @RequestParam serviceType: ServiceType,
+        @RequestParam targetType: String,
+        @RequestParam targetId: Long
+    ): Boolean = bookmarkService.isBookmarkedInternal(userId, serviceType, targetType, targetId)
+
+    @Operation(summary = "북마크 수 조회 (내부용)")
+    @GetMapping("/count")
+    fun getBookmarkCount(
+        @RequestParam serviceType: ServiceType,
+        @RequestParam targetType: String,
+        @RequestParam targetId: Long
+    ): Long = bookmarkService.getBookmarkCountInternal(serviceType, targetType, targetId)
+
+    @Operation(summary = "북마크 여부 배치 확인 (내부용)")
+    @PostMapping("/check-batch")
+    fun checkBatch(@RequestBody request: BatchCheckRequest): Set<Long> =
+        bookmarkService.getBookmarkedIds(request.userId, request.serviceType, request.targetType, request.targetIds)
+
+    @Operation(summary = "북마크 수 배치 조회 (내부용)")
+    @PostMapping("/count-batch")
+    fun countBatch(@RequestBody request: BatchCountRequest): Map<Long, Long> =
+        bookmarkService.getBookmarkCountBatch(request.serviceType, request.targetType, request.targetIds)
+}
+
+data class BatchCheckRequest(
+    val userId: Long,
+    val serviceType: ServiceType,
+    val targetType: String,
+    val targetIds: List<Long>
+)
+
+data class BatchCountRequest(
+    val serviceType: ServiceType,
+    val targetType: String,
+    val targetIds: List<Long>
+)

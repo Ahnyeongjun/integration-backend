@@ -65,6 +65,34 @@ class BookmarkService(
     private fun getCount(request: BookmarkRequest): Long {
         return bookmarkRepository.countByTarget(request.serviceType, request.targetType, request.targetId)
     }
+
+    // Internal API methods for service-to-service communication
+    @Transactional(readOnly = true)
+    fun isBookmarkedInternal(userId: Long, serviceType: ServiceType, targetType: String, targetId: Long): Boolean {
+        val type = TargetType.valueOf(targetType)
+        return bookmarkRepository.existsByUserAndTarget(userId, serviceType, type, targetId)
+    }
+
+    @Transactional(readOnly = true)
+    fun getBookmarkCountInternal(serviceType: ServiceType, targetType: String, targetId: Long): Long {
+        val type = TargetType.valueOf(targetType)
+        return bookmarkRepository.countByTarget(serviceType, type, targetId)
+    }
+
+    @Transactional(readOnly = true)
+    fun getBookmarkedIds(userId: Long, serviceType: ServiceType, targetType: String, targetIds: List<Long>): Set<Long> {
+        if (targetIds.isEmpty()) return emptySet()
+        val type = TargetType.valueOf(targetType)
+        return bookmarkRepository.findBookmarkedTargetIds(userId, serviceType, type, targetIds).toSet()
+    }
+
+    @Transactional(readOnly = true)
+    fun getBookmarkCountBatch(serviceType: ServiceType, targetType: String, targetIds: List<Long>): Map<Long, Long> {
+        if (targetIds.isEmpty()) return emptyMap()
+        val type = TargetType.valueOf(targetType)
+        return bookmarkRepository.countByTargetIds(serviceType, type, targetIds)
+            .associate { (it[0] as Long) to (it[1] as Long) }
+    }
 }
 
 data class BookmarkRequest(

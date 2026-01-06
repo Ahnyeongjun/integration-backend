@@ -24,4 +24,11 @@ interface BookmarkRepository : JpaRepository<Bookmark, Long> {
 
     @Query("SELECT CASE WHEN COUNT(b) > 0 THEN true ELSE false END FROM Bookmark b WHERE b.userId = :userId AND b.serviceType = :serviceType AND b.targetType = :targetType AND b.targetId = :targetId AND b.deletedAt IS NULL")
     fun existsByUserAndTarget(userId: Long, serviceType: ServiceType, targetType: TargetType, targetId: Long): Boolean
+
+    // Batch queries for internal API
+    @Query("SELECT b.targetId FROM Bookmark b WHERE b.userId = :userId AND b.serviceType = :serviceType AND b.targetType = :targetType AND b.targetId IN :targetIds AND b.deletedAt IS NULL")
+    fun findBookmarkedTargetIds(userId: Long, serviceType: ServiceType, targetType: TargetType, targetIds: List<Long>): List<Long>
+
+    @Query("SELECT b.targetId, COUNT(b) FROM Bookmark b WHERE b.serviceType = :serviceType AND b.targetType = :targetType AND b.targetId IN :targetIds AND b.deletedAt IS NULL GROUP BY b.targetId")
+    fun countByTargetIds(serviceType: ServiceType, targetType: TargetType, targetIds: List<Long>): List<Array<Any>>
 }

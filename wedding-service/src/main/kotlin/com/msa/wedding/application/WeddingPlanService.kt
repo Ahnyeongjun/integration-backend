@@ -1,9 +1,9 @@
 package com.msa.wedding.application
 
-import com.msa.common.exception.ForbiddenException
 import com.msa.common.exception.NotFoundException
+import com.msa.wedding.api.controller.WeddingPlanResponse
 import com.msa.wedding.domain.entity.WeddingPlan
-import com.msa.wedding.domain.repository.DressRepository
+import com.msa.wedding.domain.repository.DressShopRepository
 import com.msa.wedding.domain.repository.MakeupShopRepository
 import com.msa.wedding.domain.repository.WeddingHallRepository
 import com.msa.wedding.domain.repository.WeddingPlanRepository
@@ -18,17 +18,15 @@ import java.time.LocalDate
 class WeddingPlanService(
     private val weddingPlanRepository: WeddingPlanRepository,
     private val weddingHallRepository: WeddingHallRepository,
-    private val dressRepository: DressRepository,
+    private val dressShopRepository: DressShopRepository,
     private val makeupShopRepository: MakeupShopRepository
 ) {
     fun getMyPlans(userId: Long, pageable: Pageable): Page<WeddingPlan> =
         weddingPlanRepository.findByUserId(userId, pageable)
 
-    fun getPlan(userId: Long, planId: Long): WeddingPlan {
-        val plan = weddingPlanRepository.findByUserIdAndId(userId, planId)
+    fun getPlan(userId: Long, planId: Long): WeddingPlan =
+        weddingPlanRepository.findByUserIdAndId(userId, planId)
             ?: throw NotFoundException("WeddingPlan", planId)
-        return plan
-    }
 
     @Transactional
     fun createPlan(userId: Long, request: PlanCreateRequest): WeddingPlan {
@@ -39,6 +37,22 @@ class WeddingPlanService(
             budget = request.budget,
             expectedGuests = request.expectedGuests
         )
+
+        request.hallId?.let { hallId ->
+            plan.selectedHall = weddingHallRepository.findById(hallId)
+                .orElseThrow { NotFoundException("WeddingHall", hallId) }
+        }
+
+        request.dressShopId?.let { dressShopId ->
+            plan.selectedDressShop = dressShopRepository.findById(dressShopId)
+                .orElseThrow { NotFoundException("DressShop", dressShopId) }
+        }
+
+        request.makeupShopId?.let { makeupShopId ->
+            plan.selectedMakeupShop = makeupShopRepository.findById(makeupShopId)
+                .orElseThrow { NotFoundException("MakeupShop", makeupShopId) }
+        }
+
         return weddingPlanRepository.save(plan)
     }
 
@@ -50,14 +64,20 @@ class WeddingPlanService(
         request.weddingDate?.let { plan.weddingDate = it }
         request.budget?.let { plan.budget = it }
         request.expectedGuests?.let { plan.expectedGuests = it }
+
         request.hallId?.let { hallId ->
-            plan.selectedHall = weddingHallRepository.findById(hallId).orElse(null)
+            plan.selectedHall = weddingHallRepository.findById(hallId)
+                .orElseThrow { NotFoundException("WeddingHall", hallId) }
         }
-        request.dressId?.let { dressId ->
-            plan.selectedDress = dressRepository.findById(dressId).orElse(null)
+
+        request.dressShopId?.let { dressShopId ->
+            plan.selectedDressShop = dressShopRepository.findById(dressShopId)
+                .orElseThrow { NotFoundException("DressShop", dressShopId) }
         }
-        request.makeupShopId?.let { shopId ->
-            plan.selectedMakeupShop = makeupShopRepository.findById(shopId).orElse(null)
+
+        request.makeupShopId?.let { makeupShopId ->
+            plan.selectedMakeupShop = makeupShopRepository.findById(makeupShopId)
+                .orElseThrow { NotFoundException("MakeupShop", makeupShopId) }
         }
 
         return weddingPlanRepository.save(plan)
@@ -74,7 +94,10 @@ data class PlanCreateRequest(
     val title: String,
     val weddingDate: LocalDate? = null,
     val budget: Long? = null,
-    val expectedGuests: Int? = null
+    val expectedGuests: Int? = null,
+    val hallId: Long? = null,
+    val dressShopId: Long? = null,
+    val makeupShopId: Long? = null
 )
 
 data class PlanUpdateRequest(
@@ -83,6 +106,6 @@ data class PlanUpdateRequest(
     val budget: Long? = null,
     val expectedGuests: Int? = null,
     val hallId: Long? = null,
-    val dressId: Long? = null,
+    val dressShopId: Long? = null,
     val makeupShopId: Long? = null
 )
