@@ -85,6 +85,28 @@ class AuthController(
         return ApiResponse.success()
     }
 
+    // ========== 비밀번호 변경 API ==========
+
+    @Operation(summary = "비밀번호 변경 (PUT)", description = "로그인된 사용자의 비밀번호 변경")
+    @PutMapping("/password")
+    fun changePasswordPut(
+        @AuthenticationPrincipal userId: Long,
+        @Valid @RequestBody request: ChangePasswordRequest
+    ): ApiResponse<MessageResponse> {
+        authService.changePassword(userId, request.currentPassword, request.newPassword)
+        return ApiResponse.success(MessageResponse("비밀번호가 변경되었습니다"))
+    }
+
+    @Operation(summary = "비밀번호 변경 (PATCH)", description = "로그인된 사용자의 비밀번호 변경")
+    @PatchMapping("/password")
+    fun changePasswordPatch(
+        @AuthenticationPrincipal userId: Long,
+        @Valid @RequestBody request: ChangePasswordRequest
+    ): ApiResponse<MessageResponse> {
+        authService.changePassword(userId, request.currentPassword, request.newPassword)
+        return ApiResponse.success(MessageResponse("비밀번호가 변경되었습니다"))
+    }
+
     // ========== 이메일 인증 API ==========
 
     @Operation(summary = "회원가입용 이메일 인증 코드 발송")
@@ -221,4 +243,13 @@ data class VerificationResponse(
 
 data class MessageResponse(
     val message: String
+)
+
+data class ChangePasswordRequest(
+    @field:NotBlank(message = "현재 비밀번호는 필수입니다")
+    val currentPassword: String,
+
+    @field:NotBlank(message = "새 비밀번호는 필수입니다")
+    @field:Size(min = 8, max = 20, message = "비밀번호는 8~20자여야 합니다")
+    val newPassword: String
 )

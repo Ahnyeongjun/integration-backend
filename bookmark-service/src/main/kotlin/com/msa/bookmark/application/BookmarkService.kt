@@ -43,6 +43,19 @@ class BookmarkService(
         }
     }
 
+    fun removeBookmark(userId: Long, serviceType: ServiceType, targetType: TargetType, targetId: Long) {
+        val existing = bookmarkRepository.findByUserAndTarget(userId, serviceType, targetType, targetId)
+        if (existing != null && !existing.isDeleted()) {
+            existing.delete()
+            bookmarkRepository.save(existing)
+        }
+    }
+
+    @Transactional(readOnly = true)
+    fun getAllMyBookmarks(userId: Long): List<Bookmark> {
+        return bookmarkRepository.findAllByUserId(userId)
+    }
+
     @Transactional(readOnly = true)
     fun getMyBookmarks(userId: Long, serviceType: ServiceType?, pageable: Pageable): Page<Bookmark> {
         return if (serviceType != null) {
@@ -50,6 +63,11 @@ class BookmarkService(
         } else {
             bookmarkRepository.findByUserId(userId, pageable)
         }
+    }
+
+    @Transactional(readOnly = true)
+    fun getBookmarksByTargetType(userId: Long, targetType: TargetType): List<Bookmark> {
+        return bookmarkRepository.findByUserIdAndTargetType(userId, targetType)
     }
 
     @Transactional(readOnly = true)

@@ -61,5 +61,18 @@ enum class TargetType {
     // Festival Service
     FESTIVAL,
     // Wedding Service
-    HALL, DRESS, MAKEUP_SHOP
+    HALL, WEDDING_HALL, DRESS, DRESS_SHOP, MAKEUP_SHOP;
+
+    companion object {
+        fun fromCategory(category: String): TargetType {
+            return when (category.lowercase()) {
+                "hall" -> HALL
+                "wedding_hall" -> WEDDING_HALL
+                "dress" -> DRESS
+                "dress_shop" -> DRESS_SHOP
+                "makeup_shop" -> MAKEUP_SHOP
+                else -> valueOf(category.uppercase())
+            }
+        }
+    }
 }

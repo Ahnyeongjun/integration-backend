@@ -32,7 +32,45 @@ class BookmarkController(
         return ApiResponse.success(bookmarkService.toggleBookmark(principal.userId, request))
     }
 
-    @Operation(summary = "내 북마크 목록")
+    @Operation(summary = "카테고리/아이템별 북마크 추가 (프론트엔드 호환)")
+    @PostMapping("/{category}/{postId}")
+    fun addBookmark(
+        @AuthenticationPrincipal principal: UserPrincipal,
+        @PathVariable category: String,
+        @PathVariable postId: Long
+    ): ApiResponse<Boolean> {
+        val targetType = TargetType.fromCategory(category)
+        val request = BookmarkRequest(
+            serviceType = ServiceType.WEDDING,
+            targetType = targetType,
+            targetId = postId
+        )
+        val result = bookmarkService.toggleBookmark(principal.userId, request)
+        return ApiResponse.success(result.bookmarked)
+    }
+
+    @Operation(summary = "카테고리/아이템별 북마크 삭제 (프론트엔드 호환)")
+    @DeleteMapping("/{category}/{postId}")
+    fun removeBookmark(
+        @AuthenticationPrincipal principal: UserPrincipal,
+        @PathVariable category: String,
+        @PathVariable postId: Long
+    ): ApiResponse<Boolean> {
+        val targetType = TargetType.fromCategory(category)
+        bookmarkService.removeBookmark(principal.userId, ServiceType.WEDDING, targetType, postId)
+        return ApiResponse.success(true)
+    }
+
+    @Operation(summary = "내 북마크 전체 목록 (프론트엔드 호환)")
+    @GetMapping
+    fun getAllMyBookmarks(
+        @AuthenticationPrincipal principal: UserPrincipal
+    ): ApiResponse<List<LikesResponseDto>> {
+        val bookmarks = bookmarkService.getAllMyBookmarks(principal.userId)
+        return ApiResponse.success(bookmarks.map { LikesResponseDto.from(it) })
+    }
+
+    @Operation(summary = "내 북마크 목록 (페이징)")
     @GetMapping("/my")
     fun getMyBookmarks(
         @AuthenticationPrincipal principal: UserPrincipal,
@@ -41,6 +79,17 @@ class BookmarkController(
     ): ApiResponse<Page<BookmarkDto>> {
         val bookmarks = bookmarkService.getMyBookmarks(principal.userId, serviceType, pageable)
         return ApiResponse.success(bookmarks.map { BookmarkDto.from(it) })
+    }
+
+    @Operation(summary = "카테고리별 북마크 목록 (프론트엔드 호환)")
+    @GetMapping("/category/{category}")
+    fun getBookmarksByCategory(
+        @AuthenticationPrincipal principal: UserPrincipal,
+        @PathVariable category: String
+    ): ApiResponse<List<LikesResponseDto>> {
+        val targetType = TargetType.fromCategory(category)
+        val bookmarks = bookmarkService.getBookmarksByTargetType(principal.userId, targetType)
+        return ApiResponse.success(bookmarks.map { LikesResponseDto.from(it) })
     }
 
     @Operation(summary = "북마크 여부 확인 (로그인 필수)")
@@ -77,6 +126,24 @@ data class BookmarkDto(
             serviceType = bookmark.serviceType,
             targetType = bookmark.targetType,
             targetId = bookmark.targetId
+        )
+    }
+}
+
+// 프론트엔드 LikesResponse와 호환되는 DTO
+data class LikesResponseDto(
+    val id: Long,
+    val likesType: String,
+    val targetId: Long,
+    val updateDt: String,
+    val itemDetails: Any? = null
+) {
+    companion object {
+        fun from(bookmark: Bookmark) = LikesResponseDto(
+            id = bookmark.id,
+            likesType = bookmark.targetType.name,
+            targetId = bookmark.targetId,
+            updateDt = bookmark.updatedAt?.toString() ?: bookmark.createdAt?.toString() ?: ""
         )
     }
 }

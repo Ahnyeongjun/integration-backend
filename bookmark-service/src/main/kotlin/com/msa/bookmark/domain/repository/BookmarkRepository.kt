@@ -10,11 +10,17 @@ import org.springframework.data.jpa.repository.Query
 
 interface BookmarkRepository : JpaRepository<Bookmark, Long> {
 
+    @Query("SELECT b FROM Bookmark b WHERE b.userId = :userId AND b.deletedAt IS NULL ORDER BY b.createdAt DESC")
+    fun findAllByUserId(userId: Long): List<Bookmark>
+
     @Query("SELECT b FROM Bookmark b WHERE b.userId = :userId AND b.deletedAt IS NULL")
     fun findByUserId(userId: Long, pageable: Pageable): Page<Bookmark>
 
     @Query("SELECT b FROM Bookmark b WHERE b.userId = :userId AND b.serviceType = :serviceType AND b.deletedAt IS NULL")
     fun findByUserIdAndServiceType(userId: Long, serviceType: ServiceType, pageable: Pageable): Page<Bookmark>
+
+    @Query("SELECT b FROM Bookmark b WHERE b.userId = :userId AND b.targetType = :targetType AND b.deletedAt IS NULL ORDER BY b.createdAt DESC")
+    fun findByUserIdAndTargetType(userId: Long, targetType: TargetType): List<Bookmark>
 
     @Query("SELECT b FROM Bookmark b WHERE b.userId = :userId AND b.serviceType = :serviceType AND b.targetType = :targetType AND b.targetId = :targetId")
     fun findByUserAndTarget(userId: Long, serviceType: ServiceType, targetType: TargetType, targetId: Long): Bookmark?

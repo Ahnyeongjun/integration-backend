@@ -212,6 +212,29 @@ class AuthService(
     }
 
     /**
+     * 로그인된 사용자의 비밀번호 변경
+     */
+    fun changePassword(userId: Long, currentPassword: String, newPassword: String) {
+        val account = localAccountRepository.findByUserId(userId)
+            ?: throw BadRequestException("계정을 찾을 수 없습니다")
+
+        if (!passwordEncoder.matches(currentPassword, account.password)) {
+            throw UnauthorizedException("현재 비밀번호가 일치하지 않습니다")
+        }
+
+        account.password = passwordEncoder.encode(newPassword)
+        localAccountRepository.save(account)
+    }
+
+    /**
+     * 완료된 사용자용 토큰 생성
+     */
+    private fun generateTokens
+        // JWT Stateless 방식이므로 서버에서 할 일 없음
+        // 클라이언트에서 토큰을 삭제하면 됨
+    }
+
+    /**
      * 완료된 사용자용 토큰 생성
      */
     private fun generateTokens(userId: Long, email: String, nickname: String, signupCompleted: Boolean): TokenResponse {

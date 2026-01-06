@@ -29,6 +29,17 @@ class WeddingHallController(
         return ApiResponse.success(weddingHallService.getHalls(keyword, sort, userId, pageable))
     }
 
+    @Operation(summary = "웨딩홀 검색 (키워드)")
+    @GetMapping("/search")
+    fun searchHalls(
+        @RequestParam keyword: String,
+        @Parameter(description = "정렬: RECENT, FAVORITE") @RequestParam(required = false) sort: SortType?,
+        @AuthenticationPrincipal userId: Long?,
+        @PageableDefault(size = 20) pageable: Pageable
+    ): ApiResponse<Page<WeddingHallResponse>> {
+        return ApiResponse.success(weddingHallService.getHalls(keyword, sort, userId, pageable))
+    }
+
     @Operation(summary = "웨딩홀 상세", description = "로그인 시 isLiked 포함")
     @GetMapping("/{id}")
     fun getHall(
