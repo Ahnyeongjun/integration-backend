@@ -2,6 +2,9 @@
 .gradle/
 build/
 !gradle/wrapper/gradle-wrapper.jar
+**/gradle/
+**/gradlew
+**/gradlew.bat
 
 # IDE
 .idea/
@@ -39,4 +42,17 @@ logs/
 
 # Docker
 docker-compose.override.yml
-bin/
+
+# Build outputs
+**/bin/
+**/out/
+**/target/
+
+# Misc
+*.orig
+*.bak
+*.tmp
+.kotlin/
+local.properties
+secrets.yml
+**/application-local.yml
