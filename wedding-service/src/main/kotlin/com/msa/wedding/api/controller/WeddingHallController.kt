@@ -22,11 +22,11 @@ class WeddingHallController(
     @GetMapping
     fun getHalls(
         @Parameter(description = "검색 키워드") @RequestParam(required = false) keyword: String?,
-        @Parameter(description = "정렬: RECENT, FAVORITE") @RequestParam(required = false) sort: SortType?,
+        @Parameter(description = "정렬: RECENT, FAVORITE") @RequestParam(required = false) sortType: SortType?,
         @AuthenticationPrincipal userId: Long?,
-        @PageableDefault(size = 20) pageable: Pageable
+        @PageableDefault(size = 20, sort = ["createdAt"], direction = org.springframework.data.domain.Sort.Direction.DESC) pageable: Pageable
     ): ApiResponse<Page<WeddingHallResponse>> {
-        return ApiResponse.success(weddingHallService.getHalls(keyword, sort, userId, pageable))
+        return ApiResponse.success(weddingHallService.getHalls(keyword, sortType, userId, pageable))
     }
 
     @Operation(summary = "웨딩홀 검색 (키워드)")
@@ -52,21 +52,21 @@ class WeddingHallController(
     @GetMapping("/type/{hallType}")
     fun getHallsByType(
         @PathVariable hallType: HallType,
-        @RequestParam(required = false) sort: SortType?,
+        @RequestParam(required = false) sortType: SortType?,
         @AuthenticationPrincipal userId: Long?,
-        @PageableDefault(size = 20) pageable: Pageable
+        @PageableDefault(size = 20, sort = ["createdAt"], direction = org.springframework.data.domain.Sort.Direction.DESC) pageable: Pageable
     ): ApiResponse<Page<WeddingHallResponse>> =
-        ApiResponse.success(weddingHallService.getHallsByType(hallType, sort, userId, pageable))
+        ApiResponse.success(weddingHallService.getHallsByType(hallType, sortType, userId, pageable))
 
     @Operation(summary = "수용인원별 목록")
     @GetMapping("/capacity")
     fun getHallsByCapacity(
         @RequestParam guests: Int,
-        @RequestParam(required = false) sort: SortType?,
+        @RequestParam(required = false) sortType: SortType?,
         @AuthenticationPrincipal userId: Long?,
-        @PageableDefault(size = 20) pageable: Pageable
+        @PageableDefault(size = 20, sort = ["createdAt"], direction = org.springframework.data.domain.Sort.Direction.DESC) pageable: Pageable
     ): ApiResponse<Page<WeddingHallResponse>> =
-        ApiResponse.success(weddingHallService.getHallsByCapacity(guests, sort, userId, pageable))
+        ApiResponse.success(weddingHallService.getHallsByCapacity(guests, sortType, userId, pageable))
 
     @Operation(summary = "웨딩홀 등록")
     @PostMapping

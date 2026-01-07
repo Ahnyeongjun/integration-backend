@@ -53,7 +53,7 @@ spring:
         - id: wedding-service
           uri: http://wedding-service:8089
           predicates:
-            - Path=/api/v1/halls/**, /api/v1/dresses/**, /api/v1/makeup-shops/**, /api/v1/plans/**
+            - Path=/api/v1/wedding-halls/**, /api/v1/dresses/**, /api/v1/dress-shops/**, /api/v1/makeup-shops/**, /api/v1/plans/**
 
         # Swagger API Docs 라우팅
         - id: auth-service-docs

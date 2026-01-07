@@ -14,6 +14,7 @@ dependencyManagement { imports { mavenBom("org.springframework.cloud:spring-clou
 dependencies {
     implementation("com.msa:common-lib:1.0.0")
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
