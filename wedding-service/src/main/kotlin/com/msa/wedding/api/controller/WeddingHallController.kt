@@ -33,11 +33,11 @@ class WeddingHallController(
     @GetMapping("/search")
     fun searchHalls(
         @RequestParam keyword: String,
-        @Parameter(description = "정렬: RECENT, FAVORITE") @RequestParam(required = false) sort: SortType?,
+        @Parameter(description = "정렬: RECENT, FAVORITE") @RequestParam(required = false) sortType: SortType?,
         @AuthenticationPrincipal userId: Long?,
         @PageableDefault(size = 20) pageable: Pageable
     ): ApiResponse<Page<WeddingHallResponse>> {
-        return ApiResponse.success(weddingHallService.getHalls(keyword, sort, userId, pageable))
+        return ApiResponse.success(weddingHallService.getHalls(keyword, sortType, userId, pageable))
     }
 
     @Operation(summary = "웨딩홀 상세", description = "로그인 시 isLiked 포함")

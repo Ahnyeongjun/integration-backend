@@ -24,11 +24,11 @@ class MakeupShopController(
         @Parameter(description = "샵 이름 검색") @RequestParam(required = false) name: String?,
         @Parameter(description = "주소/지역 검색") @RequestParam(required = false) address: String?,
         @Parameter(description = "전문분야 검색") @RequestParam(required = false) specialty: String?,
-        @Parameter(description = "정렬: RECENT, FAVORITE") @RequestParam(required = false) sort: SortType?,
+        @Parameter(description = "정렬: RECENT, FAVORITE") @RequestParam(required = false) sortType: SortType?,
         @AuthenticationPrincipal userId: Long?,
         @PageableDefault(size = 20) pageable: Pageable
     ): ApiResponse<Page<MakeupShopResponse>> {
-        return ApiResponse.success(makeupShopService.searchShops(name, address, specialty, sort, userId, pageable))
+        return ApiResponse.success(makeupShopService.searchShops(name, address, specialty, sortType, userId, pageable))
     }
 
     @Operation(summary = "메이크업샵 상세", description = "로그인 시 isLiked 포함")

@@ -21,10 +21,10 @@ class DressController(
     @GetMapping
     fun getDresses(
         @Parameter(description = "검색 키워드") @RequestParam(required = false) keyword: String?,
-        @Parameter(description = "정렬: RECENT") @RequestParam(required = false) sort: SortType?,
+        @Parameter(description = "정렬: RECENT, FAVORITE") @RequestParam(required = false) sortType: SortType?,
         @PageableDefault(size = 20) pageable: Pageable
     ): ApiResponse<Page<DressResponse>> {
-        return ApiResponse.success(dressService.getDresses(keyword, sort, pageable))
+        return ApiResponse.success(dressService.getDresses(keyword, sortType, pageable))
     }
 
     @Operation(summary = "드레스 상세")

@@ -24,11 +24,11 @@ class DressShopController(
         @Parameter(description = "샵 이름 검색") @RequestParam(required = false) shopName: String?,
         @Parameter(description = "주소/지역 검색") @RequestParam(required = false) address: String?,
         @Parameter(description = "전문분야 검색") @RequestParam(required = false) specialty: String?,
-        @Parameter(description = "정렬: RECENT, FAVORITE") @RequestParam(required = false) sort: SortType?,
+        @Parameter(description = "정렬: RECENT, FAVORITE") @RequestParam(required = false) sortType: SortType?,
         @AuthenticationPrincipal userId: Long?,
         @PageableDefault(size = 20) pageable: Pageable
     ): ApiResponse<Page<DressShopResponse>> {
-        return ApiResponse.success(dressShopService.searchShops(shopName, address, specialty, sort, userId, pageable))
+        return ApiResponse.success(dressShopService.searchShops(shopName, address, specialty, sortType, userId, pageable))
     }
 
     @Operation(summary = "드레스샵 상세", description = "로그인 시 isLiked 포함")
