@@ -55,6 +55,18 @@ spring:
           predicates:
             - Path=/api/v1/wedding-halls/**, /api/v1/dresses/**, /api/v1/dress-shops/**, /api/v1/makeup-shops/**, /api/v1/plans/**
 
+        - id: ai-service
+          uri: http://ai-service:8090
+          predicates:
+            - Path=/api/v1/recommend/**
+          filters:
+            - RewritePath=/api/v1/(?<segment>.*), /${segment}
+
+        - id: image-service
+          uri: http://image-service:8100
+          predicates:
+            - Path=/images/**
+
         # Swagger API Docs 라우팅
         - id: auth-service-docs
           uri: http://auth-service:8081
@@ -119,6 +131,13 @@ spring:
           filters:
             - RewritePath=/v3/api-docs/book, /v3/api-docs
 
+        - id: ai-service-docs
+          uri: http://ai-service:8090
+          predicates:
+            - Path=/v3/api-docs/ai
+          filters:
+            - RewritePath=/v3/api-docs/ai, /openapi.json
+
 eureka:
   client:
     enabled: false
@@ -149,3 +168,5 @@ springdoc:
         url: /v3/api-docs/ticketing
       - name: book-service
         url: /v3/api-docs/book
+      - name: ai-service
+        url: /v3/api-docs/ai

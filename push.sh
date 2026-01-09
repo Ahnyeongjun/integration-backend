@@ -21,6 +21,8 @@ SERVICES=(
     "travel-service"
     "festival-service"
     "wedding-service"
+    "ai-service"
+    "image-service"
 )
 
 echo ""

@@ -6,23 +6,28 @@ echo "=========================================="
 
 NAMESPACE="msa-platform"
 
-# 1. Business Services
-echo "[1/3] Business Services 중지..."
+# 1. AI & Image Services
+echo "[1/4] AI & Image Services 중지..."
+kubectl delete -f image-service/k8s/ --ignore-not-found
+kubectl delete -f ai-service/k8s/ --ignore-not-found
+
+# 2. Business Services
+echo "[2/4] Business Services 중지..."
 kubectl delete -f wedding-service/k8s/ --ignore-not-found
 kubectl delete -f festival-service/k8s/ --ignore-not-found
 kubectl delete -f travel-service/k8s/ --ignore-not-found
 kubectl delete -f book-service/k8s/ --ignore-not-found
 kubectl delete -f ticketing-service/k8s/ --ignore-not-found
 
-# 2. Core Services
-echo "[2/3] Core Services 중지..."
+# 3. Core Services
+echo "[3/4] Core Services 중지..."
 kubectl delete -f schedule-service/k8s/ --ignore-not-found
 kubectl delete -f bookmark-service/k8s/ --ignore-not-found
 kubectl delete -f user-service/k8s/ --ignore-not-found
 kubectl delete -f auth-service/k8s/ --ignore-not-found
 
-# 3. Gateway
-echo "[3/3] Gateway 중지..."
+# 4. Gateway
+echo "[4/4] Gateway 중지..."
 kubectl delete -f gateway/k8s/ --ignore-not-found
 
 echo ""

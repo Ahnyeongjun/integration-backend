@@ -7,23 +7,28 @@ echo "=========================================="
 NAMESPACE="msa-platform"
 
 # 1. Gateway
-echo "[1/3] Gateway 시작..."
+echo "[1/4] Gateway 시작..."
 kubectl apply -f gateway/k8s/
 
 # 2. Core Services
-echo "[2/3] Core Services 시작..."
+echo "[2/4] Core Services 시작..."
 kubectl apply -f auth-service/k8s/
 kubectl apply -f user-service/k8s/
 kubectl apply -f bookmark-service/k8s/
 kubectl apply -f schedule-service/k8s/
 
 # 3. Business Services
-echo "[3/3] Business Services 시작..."
+echo "[3/4] Business Services 시작..."
 kubectl apply -f ticketing-service/k8s/
 kubectl apply -f book-service/k8s/
 kubectl apply -f travel-service/k8s/
 kubectl apply -f festival-service/k8s/
 kubectl apply -f wedding-service/k8s/
+
+# 4. AI & Image Services
+echo "[4/4] AI & Image Services 시작..."
+kubectl apply -f ai-service/k8s/
+kubectl apply -f image-service/k8s/
 
 echo ""
 echo "=========================================="

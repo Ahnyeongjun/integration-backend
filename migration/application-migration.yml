@@ -1,0 +1,41 @@
+# Wedding Service - Migration Configuration
+# Use this configuration when running migration
+
+spring:
+  application:
+    name: wedding-service
+  datasource:
+    url: jdbc:mysql://223.130.163.203:30306/wedding_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&characterEncoding=UTF-8
+    username: root
+    password: ${DB_PASSWORD:root}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        format_sql: true
+    show-sql: true
+    open-in-view: false
+
+server:
+  port: 8089
+
+eureka:
+  client:
+    enabled: false
+
+jwt:
+  secret: your-256-bit-secret-key-for-jwt-token-generation-min-32-chars
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE

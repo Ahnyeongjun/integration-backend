@@ -12,7 +12,8 @@ TAG="${BUILD_TAG:-latest}"
 PLATFORMS="${PLATFORMS:-linux/amd64,linux/arm64}"
 BUILDER_NAME="msa-multiarch-builder"
 
-SERVICES=(
+# Gradle 기반 서비스
+GRADLE_SERVICES=(
     "gateway"
     "auth-service"
     "user-service"
@@ -24,6 +25,15 @@ SERVICES=(
     "festival-service"
     "wedding-service"
 )
+
+# Non-Gradle 서비스 (Python, Nginx 등)
+OTHER_SERVICES=(
+    "ai-service"
+    "image-service"
+)
+
+# 전체 서비스 목록
+SERVICES=("${GRADLE_SERVICES[@]}" "${OTHER_SERVICES[@]}")
 
 echo ""
 echo "Registry: ${REGISTRY}"
@@ -74,17 +84,17 @@ fi
 cd ..
 echo "✅ common-lib 완료"
 
-# 2. 각 서비스 빌드 (Gradle만)
+# 2. 각 Gradle 서비스 빌드
 echo ""
 echo "=========================================="
 echo "  Gradle 빌드"
 echo "=========================================="
-for i in "${!SERVICES[@]}"; do
-    svc="${SERVICES[$i]}"
+for i in "${!GRADLE_SERVICES[@]}"; do
+    svc="${GRADLE_SERVICES[$i]}"
     num=$((i + 1))
 
     echo ""
-    echo "[${num}/${#SERVICES[@]}] ${svc} Gradle 빌드 중..."
+    echo "[${num}/${#GRADLE_SERVICES[@]}] ${svc} Gradle 빌드 중..."
 
     cd "$svc"
     ./gradlew clean build -x test
@@ -94,6 +104,14 @@ for i in "${!SERVICES[@]}"; do
     fi
     echo "✅ ${svc} Gradle 완료"
     cd ..
+done
+
+echo ""
+echo "=========================================="
+echo "  Non-Gradle 서비스 (빌드 스킵)"
+echo "=========================================="
+for svc in "${OTHER_SERVICES[@]}"; do
+    echo "✅ ${svc} - Gradle 빌드 불필요 (Docker 빌드에서 처리)"
 done
 
 # 3. Docker 멀티 아키텍처 빌드 & 푸시
