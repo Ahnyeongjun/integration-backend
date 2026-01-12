@@ -1,5 +1,6 @@
 package com.msa.schedule.api.controller
 
+import com.msa.common.enums.ServiceType
 import com.msa.common.response.ApiResponse
 import com.msa.schedule.application.*
 import com.msa.schedule.domain.entity.Schedule
@@ -32,9 +33,10 @@ class ScheduleController(
     fun getMonthlySchedules(
         @AuthenticationPrincipal userId: Long,
         @RequestParam year: Int,
-        @RequestParam month: Int
+        @RequestParam month: Int,
+        @RequestParam(required = false) serviceType: ServiceType?
     ): ApiResponse<List<ScheduleResponse>> {
-        val schedules = scheduleService.getMonthlySchedules(userId, year, month)
+        val schedules = scheduleService.getMonthlySchedules(userId, year, month, serviceType)
         return ApiResponse.success(schedules.map { ScheduleResponse.from(it) })
     }
 
@@ -42,9 +44,10 @@ class ScheduleController(
     @GetMapping("/week")
     fun getWeeklySchedules(
         @AuthenticationPrincipal userId: Long,
-        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) startDate: LocalDate
+        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) startDate: LocalDate,
+        @RequestParam(required = false) serviceType: ServiceType?
     ): ApiResponse<List<ScheduleResponse>> {
-        val schedules = scheduleService.getWeeklySchedules(userId, startDate)
+        val schedules = scheduleService.getWeeklySchedules(userId, startDate, serviceType)
         return ApiResponse.success(schedules.map { ScheduleResponse.from(it) })
     }
 
@@ -52,9 +55,10 @@ class ScheduleController(
     @GetMapping("/day")
     fun getDailySchedules(
         @AuthenticationPrincipal userId: Long,
-        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) date: LocalDate
+        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) date: LocalDate,
+        @RequestParam(required = false) serviceType: ServiceType?
     ): ApiResponse<List<ScheduleResponse>> {
-        val schedules = scheduleService.getDailySchedules(userId, date)
+        val schedules = scheduleService.getDailySchedules(userId, date, serviceType)
         return ApiResponse.success(schedules.map { ScheduleResponse.from(it) })
     }
 

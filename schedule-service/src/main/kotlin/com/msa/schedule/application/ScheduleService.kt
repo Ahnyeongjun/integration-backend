@@ -34,22 +34,34 @@ class ScheduleService(
     }
 
     @Transactional(readOnly = true)
-    fun getMonthlySchedules(userId: Long, year: Int, month: Int): List<Schedule> {
+    fun getMonthlySchedules(userId: Long, year: Int, month: Int, serviceType: ServiceType? = null): List<Schedule> {
         val yearMonth = YearMonth.of(year, month)
         val startDate = yearMonth.atDay(1)
         val endDate = yearMonth.atEndOfMonth()
-        return scheduleRepository.findByUserIdAndDateRange(userId, startDate, endDate)
+        return if (serviceType != null) {
+            scheduleRepository.findByUserIdAndServiceTypeAndDateRange(userId, serviceType, startDate, endDate)
+        } else {
+            scheduleRepository.findByUserIdAndDateRange(userId, startDate, endDate)
+        }
     }
 
     @Transactional(readOnly = true)
-    fun getWeeklySchedules(userId: Long, startDate: LocalDate): List<Schedule> {
+    fun getWeeklySchedules(userId: Long, startDate: LocalDate, serviceType: ServiceType? = null): List<Schedule> {
         val endDate = startDate.plusDays(6)
-        return scheduleRepository.findByUserIdAndDateRange(userId, startDate, endDate)
+        return if (serviceType != null) {
+            scheduleRepository.findByUserIdAndServiceTypeAndDateRange(userId, serviceType, startDate, endDate)
+        } else {
+            scheduleRepository.findByUserIdAndDateRange(userId, startDate, endDate)
+        }
     }
 
     @Transactional(readOnly = true)
-    fun getDailySchedules(userId: Long, date: LocalDate): List<Schedule> {
-        return scheduleRepository.findByUserIdAndStartDate(userId, date)
+    fun getDailySchedules(userId: Long, date: LocalDate, serviceType: ServiceType? = null): List<Schedule> {
+        return if (serviceType != null) {
+            scheduleRepository.findByUserIdAndServiceTypeAndStartDate(userId, serviceType, date)
+        } else {
+            scheduleRepository.findByUserIdAndStartDate(userId, date)
+        }
     }
 
     @Transactional(readOnly = true)
