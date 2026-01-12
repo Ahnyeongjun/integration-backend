@@ -65,7 +65,16 @@ spring:
         - id: image-service
           uri: http://image-service:8100
           predicates:
+            - Path=/api/v1/images/**
+          filters:
+            - RewritePath=/api/v1/images/(?<segment>.*), /${segment}
+
+        - id: minio
+          uri: http://minio.msa-platform.svc.cluster.local:9000
+          predicates:
             - Path=/images/**
+          filters:
+            - RewritePath=/images/(?<segment>.*), /images/${segment}
 
         # Swagger API Docs 라우팅
         - id: auth-service-docs

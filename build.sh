@@ -97,7 +97,7 @@ for i in "${!GRADLE_SERVICES[@]}"; do
     echo "[${num}/${#GRADLE_SERVICES[@]}] ${svc} Gradle 빌드 중..."
 
     cd "$svc"
-    ./gradlew clean build -x test
+    ./gradlew clean build -x test --no-daemon
     if [ $? -ne 0 ]; then
         echo "❌ ${svc} Gradle 빌드 실패!"
         exit 1

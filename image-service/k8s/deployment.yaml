@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: image-service
-  namespace: msa
+  namespace: msa-platform
   labels:
     app: image-service
 spec:
@@ -17,47 +17,56 @@ spec:
     spec:
       containers:
         - name: image-service
-          image: image-service:latest
-          imagePullPolicy: IfNotPresent
+          image: 100.67.243.29:30500/image-service:latest
+          imagePullPolicy: Always
           ports:
-            - containerPort: 80
-          volumeMounts:
-            - name: image-storage
-              mountPath: /data/images
-              readOnly: true
+            - containerPort: 8100
+          env:
+            - name: MINIO_ENDPOINT
+              value: "minio:9000"
+            - name: MINIO_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: minio-secret
+                  key: root-user
+            - name: MINIO_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: minio-secret
+                  key: root-password
+            - name: MINIO_BUCKET
+              value: "images"
+            - name: MINIO_SECURE
+              value: "false"
           resources:
             requests:
-              memory: "32Mi"
+              memory: "64Mi"
               cpu: "50m"
             limits:
-              memory: "64Mi"
-              cpu: "100m"
+              memory: "128Mi"
+              cpu: "200m"
           livenessProbe:
             httpGet:
               path: /health
-              port: 80
-            initialDelaySeconds: 5
+              port: 8100
+            initialDelaySeconds: 10
             periodSeconds: 10
           readinessProbe:
             httpGet:
               path: /health
-              port: 80
-            initialDelaySeconds: 2
+              port: 8100
+            initialDelaySeconds: 5
             periodSeconds: 5
-      volumes:
-        - name: image-storage
-          persistentVolumeClaim:
-            claimName: image-storage-pvc
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: image-service
-  namespace: msa
+  namespace: msa-platform
 spec:
   selector:
     app: image-service
   ports:
     - port: 8100
-      targetPort: 80
+      targetPort: 8100
   type: ClusterIP

@@ -73,7 +73,7 @@ class WeddingHallService(
     }
 
     @Transactional
-    fun createHall(request: HallCreateRequest): WeddingHallResponse {
+    fun createHall(request: WeddingHallCreateRequest): WeddingHallResponse {
         val hall = WeddingHall(
             name = request.name,
             address = request.address,
@@ -92,7 +92,7 @@ class WeddingHallService(
     }
 
     @Transactional
-    fun updateHall(id: Long, request: HallUpdateRequest): WeddingHallResponse {
+    fun updateHall(id: Long, request: WeddingHallUpdateRequest): WeddingHallResponse {
         val hall = getHall(id)
         request.name?.let { hall.name = it }
         request.address?.let { hall.address = it }
@@ -150,7 +150,7 @@ class WeddingHallService(
     }
 }
 
-data class HallCreateRequest(
+data class WeddingHallCreateRequest(
     val name: String,
     val address: String,
     val hallType: HallType,
@@ -164,7 +164,7 @@ data class HallCreateRequest(
     val parking: Int? = null
 )
 
-data class HallUpdateRequest(
+data class WeddingHallUpdateRequest(
     val name: String? = null,
     val address: String? = null,
     val hallType: HallType? = null,

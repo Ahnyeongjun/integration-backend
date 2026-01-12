@@ -40,6 +40,21 @@ spec:
                 secretKeyRef:
                   name: msa-secrets
                   key: MAIL_PASSWORD
+            - name: GOOGLE_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: msa-secrets
+                  key: GOOGLE_CLIENT_ID
+            - name: GOOGLE_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: msa-secrets
+                  key: GOOGLE_CLIENT_SECRET
+            - name: KAKAO_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: msa-secrets
+                  key: KAKAO_CLIENT_ID
           envFrom:
             - configMapRef:
                 name: msa-config

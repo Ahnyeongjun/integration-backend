@@ -25,6 +25,11 @@ class GoogleOAuthClient(
 
     override fun getUserInfo(code: String, redirectUri: String): OAuthUserInfo {
         // 1. code → access_token 교환
+        println("🔵 [GoogleOAuth] Starting token exchange...")
+        println("🔵 [GoogleOAuth] redirectUri: $redirectUri")
+        println("🔵 [GoogleOAuth] clientId: $clientId")
+        println("🔵 [GoogleOAuth] tokenUri: $tokenUri")
+
         val params = LinkedMultiValueMap<String, String>().apply {
             add("code", code)
             add("client_id", clientId)
@@ -33,8 +38,22 @@ class GoogleOAuthClient(
             add("grant_type", "authorization_code")
         }
 
-        val tokenResponse = restTemplate.postForObject(tokenUri, params, Map::class.java)
-            ?: throw RuntimeException("Failed to get Google access token")
+        val tokenResponse = try {
+            restTemplate.postForObject(tokenUri, params, Map::class.java)
+        } catch (e: Exception) {
+            println("❌ [GoogleOAuth] Token exchange failed: ${e.message}")
+            println("❌ [GoogleOAuth] Exception type: ${e.javaClass.simpleName}")
+            if (e is org.springframework.web.client.HttpClientErrorException) {
+                println("❌ [GoogleOAuth] Response body: ${e.responseBodyAsString}")
+            }
+            throw e
+        }
+
+        if (tokenResponse == null) {
+            throw RuntimeException("Failed to get Google access token")
+        }
+
+        println("✅ [GoogleOAuth] Token exchange successful")
 
         val accessToken = tokenResponse["access_token"] as String
 

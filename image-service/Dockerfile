@@ -1,12 +1,12 @@
-FROM nginx:alpine
+FROM python:3.11-slim
 
-# Copy nginx config
-COPY nginx.conf /etc/nginx/nginx.conf
+WORKDIR /app
 
-# Create image directory
-RUN mkdir -p /data/images
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Expose port
-EXPOSE 80
+COPY src/ ./src/
 
-CMD ["nginx", "-g", "daemon off;"]
+EXPOSE 8100
+
+CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8100"]

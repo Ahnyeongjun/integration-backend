@@ -22,6 +22,9 @@ class SecurityConfig : BaseSecurityConfig() {
                     .requestMatchers(*PublicPaths.SWAGGER).permitAll()
                     .requestMatchers(*PublicPaths.ACTUATOR).permitAll()
 
+                    // 내부 서비스 간 통신 API (인증 없이 허용)
+                    .requestMatchers("/api/v1/bookmarks/internal/**").permitAll()
+
                     // 공개 API
                     .requestMatchers(HttpMethod.GET, "/api/v1/bookmarks/count").permitAll()
 

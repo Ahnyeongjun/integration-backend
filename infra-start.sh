@@ -31,8 +31,13 @@ kubectl wait --for=condition=ready pod -l app=zookeeper -n $NAMESPACE --timeout=
 kubectl apply -f infra/k8s/kafka.yaml
 kubectl wait --for=condition=ready pod -l app=kafka -n $NAMESPACE --timeout=120s
 
-# 5. Jenkins
-echo "[5/5] Jenkins 시작..."
+# 5. MinIO
+echo "[5/6] MinIO 시작..."
+kubectl apply -f infra/k8s/minio.yaml
+kubectl wait --for=condition=ready pod -l app=minio -n $NAMESPACE --timeout=120s
+
+# 6. Jenkins
+echo "[6/6] Jenkins 시작..."
 kubectl apply -f infra/k8s/jenkins.yaml
 
 echo ""

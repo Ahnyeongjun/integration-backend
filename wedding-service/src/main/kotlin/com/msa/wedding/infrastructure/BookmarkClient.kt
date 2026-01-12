@@ -8,7 +8,7 @@ import org.springframework.web.reactive.function.client.bodyToMono
 
 @Component
 class BookmarkClient(
-    @Value("\${services.bookmark-service.url:http://bookmark-service:8080}")
+    @Value("\${services.bookmark-service.url:http://bookmark-service:8083}")
     private val bookmarkServiceUrl: String
 ) {
     private val webClient = WebClient.builder()

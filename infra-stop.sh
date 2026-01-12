@@ -6,19 +6,22 @@ echo "=========================================="
 
 NAMESPACE="msa-platform"
 
-echo "[1/5] Jenkins 중지..."
+echo "[1/6] Jenkins 중지..."
 kubectl delete -f infra/k8s/jenkins.yaml --ignore-not-found
 
-echo "[2/5] Kafka 중지..."
+echo "[2/6] MinIO 중지..."
+kubectl delete -f infra/k8s/minio.yaml --ignore-not-found
+
+echo "[3/6] Kafka 중지..."
 kubectl delete -f infra/k8s/kafka.yaml --ignore-not-found
 
-echo "[3/5] Zookeeper 중지..."
+echo "[4/6] Zookeeper 중지..."
 kubectl delete -f infra/k8s/zookeeper.yaml --ignore-not-found
 
-echo "[4/5] Redis 중지..."
+echo "[5/6] Redis 중지..."
 kubectl delete -f infra/k8s/redis.yaml --ignore-not-found
 
-echo "[5/5] MySQL 중지..."
+echo "[6/6] MySQL 중지..."
 kubectl delete -f infra/k8s/mysql.yaml --ignore-not-found
 
 echo ""

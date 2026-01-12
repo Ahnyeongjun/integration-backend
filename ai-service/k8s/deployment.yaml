@@ -17,23 +17,17 @@ spec:
     spec:
       containers:
         - name: ai-service
-          image: ai-service:latest
+          image: 100.67.243.29:30500/ai-service:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8000
           env:
             - name: DB_HOST
-              valueFrom:
-                configMapKeyRef:
-                  name: msa-config
-                  key: MYSQL_HOST
+              value: "mysql.msa-platform"
             - name: DB_PORT
               value: "3306"
             - name: DB_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: msa-secrets
-                  key: MYSQL_USERNAME
+              value: "root"
             - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
@@ -46,6 +40,7 @@ spec:
                 secretKeyRef:
                   name: msa-secrets
                   key: OPENAI_API_KEY
+                  optional: true
           resources:
             requests:
               memory: "256Mi"

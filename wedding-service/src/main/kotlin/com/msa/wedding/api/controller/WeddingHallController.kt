@@ -70,14 +70,14 @@ class WeddingHallController(
 
     @Operation(summary = "웨딩홀 등록")
     @PostMapping
-    fun createHall(@RequestBody request: HallCreateRequest): ApiResponse<WeddingHallResponse> =
+    fun createHall(@RequestBody request: WeddingHallCreateRequest): ApiResponse<WeddingHallResponse> =
         ApiResponse.success(weddingHallService.createHall(request))
 
     @Operation(summary = "웨딩홀 수정")
     @PutMapping("/{id}")
     fun updateHall(
         @PathVariable id: Long,
-        @RequestBody request: HallUpdateRequest
+        @RequestBody request: WeddingHallUpdateRequest
     ): ApiResponse<WeddingHallResponse> =
         ApiResponse.success(weddingHallService.updateHall(id, request))
 

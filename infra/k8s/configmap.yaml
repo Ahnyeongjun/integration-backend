@@ -11,3 +11,9 @@ data:
   # Gmail SMTP 설정
   MAIL_HOST: "smtp.gmail.com"
   MAIL_PORT: "587"
+  # MinIO 설정
+  MINIO_ENABLED: "true"
+  MINIO_ENDPOINT: "http://minio.msa.svc.cluster.local:9000"
+  MINIO_ACCESS_KEY: "minio"
+  MINIO_SECRET_KEY: "minio123!"
+  MINIO_BUCKET: "images"

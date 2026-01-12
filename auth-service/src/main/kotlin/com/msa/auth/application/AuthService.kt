@@ -229,14 +229,6 @@ class AuthService(
     /**
      * 완료된 사용자용 토큰 생성
      */
-    private fun generateTokens
-        // JWT Stateless 방식이므로 서버에서 할 일 없음
-        // 클라이언트에서 토큰을 삭제하면 됨
-    }
-
-    /**
-     * 완료된 사용자용 토큰 생성
-     */
     private fun generateTokens(userId: Long, email: String, nickname: String, signupCompleted: Boolean): TokenResponse {
         val accessToken = jwtTokenProvider.createAccessToken(userId, email, nickname, signupCompleted)
         val refreshToken = jwtTokenProvider.createRefreshToken(userId, email, nickname, signupCompleted)
