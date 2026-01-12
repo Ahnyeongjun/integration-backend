@@ -58,9 +58,10 @@ spring:
         - id: ai-service
           uri: http://ai-service:8090
           predicates:
-            - Path=/api/v1/recommend/**
+            - Path=/api/v1/recommend/**, /api/recommend/**
           filters:
             - RewritePath=/api/v1/(?<segment>.*), /${segment}
+            - RewritePath=/api/(?<segment>recommend.*), /${segment}
 
         - id: image-service
           uri: http://image-service:8100

@@ -18,6 +18,9 @@ spring:
     consumer:
       group-id: user-service
       auto-offset-reset: earliest
+      enable-auto-commit: false
+    listener:
+      ack-mode: record
 
 eureka:
   client:

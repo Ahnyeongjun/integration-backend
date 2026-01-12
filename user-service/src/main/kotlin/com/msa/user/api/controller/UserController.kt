@@ -18,7 +18,7 @@ class UserController(
 
     @Operation(summary = "내 정보 조회")
     @GetMapping("/me")
-    fun getMyProfile(@AuthenticationPrincipal userId: Long): ApiResponse<UserResponse> {
+    fun getMyProfile(@AuthenticationPrincipal(expression = "userId") userId: Long): ApiResponse<UserResponse> {
         val user = userService.getUser(userId)
         return ApiResponse.success(UserResponse.from(user))
     }
@@ -33,7 +33,7 @@ class UserController(
     @Operation(summary = "프로필 수정 (PUT)")
     @PutMapping("/me")
     fun updateProfilePut(
-        @AuthenticationPrincipal userId: Long,
+        @AuthenticationPrincipal(expression = "userId") userId: Long,
         @RequestBody request: ProfileUpdateRequest
     ): ApiResponse<UserResponse> {
         val user = userService.updateProfile(userId, request)
@@ -43,7 +43,7 @@ class UserController(
     @Operation(summary = "프로필 수정 (PATCH)")
     @PatchMapping("/me")
     fun updateProfilePatch(
-        @AuthenticationPrincipal userId: Long,
+        @AuthenticationPrincipal(expression = "userId") userId: Long,
         @RequestBody request: ProfileUpdateRequest
     ): ApiResponse<UserResponse> {
         val user = userService.updateProfile(userId, request)
@@ -52,7 +52,7 @@ class UserController(
 
     @Operation(summary = "회원 탈퇴")
     @DeleteMapping("/me")
-    fun deleteUser(@AuthenticationPrincipal userId: Long): ApiResponse<Unit> {
+    fun deleteUser(@AuthenticationPrincipal(expression = "userId") userId: Long): ApiResponse<Unit> {
         userService.deleteUser(userId)
         return ApiResponse.success()
     }
