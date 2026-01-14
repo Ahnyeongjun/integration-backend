@@ -21,7 +21,7 @@ import java.util.concurrent.ConcurrentHashMap
  */
 @Tag(name = "Mock Itinerary", description = "여행 일정 Mock API (MCP 미지원)")
 @RestController
-@RequestMapping("/api/v1/itinerary")
+@RequestMapping("/api/v1/itineraries")
 class MockItineraryController(
     private val itineraryRepository: ItineraryRepository
 ) {
