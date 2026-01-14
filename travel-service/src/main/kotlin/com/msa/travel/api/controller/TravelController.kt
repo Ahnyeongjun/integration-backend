@@ -1,7 +1,5 @@
 package com.msa.travel.api.controller
 
-import com.msa.common.exception.ForbiddenException
-import com.msa.common.exception.NotFoundException
 import com.msa.common.response.ApiResponse
 import com.msa.travel.domain.entity.Itinerary
 import com.msa.travel.domain.repository.ItineraryRepository
@@ -29,34 +27,7 @@ class ItineraryController(
         return ApiResponse.success(itineraryRepository.findByUserId(userId, pageable).map { ItineraryResponse.from(it) })
     }
 
-    @Operation(summary = "여행 일정 상세")
-    @GetMapping("/{id}")
-    fun getItinerary(
-        @AuthenticationPrincipal(expression = "userId") userId: Long,
-        @PathVariable id: Long
-    ): ApiResponse<ItineraryResponse> {
-        val itinerary = itineraryRepository.findById(id).orElseThrow { NotFoundException("Itinerary", id) }
-        if (itinerary.userId != userId && !itinerary.isPublic) {
-            throw ForbiddenException("Cannot access this itinerary")
-        }
-        return ApiResponse.success(ItineraryResponse.from(itinerary))
-    }
-
-    @Operation(summary = "공개 여행 일정")
-    @GetMapping("/public")
-    fun getPublicItineraries(@PageableDefault(size = 10) pageable: Pageable): ApiResponse<Page<ItineraryResponse>> {
-        return ApiResponse.success(itineraryRepository.findPublicItineraries(pageable).map { ItineraryResponse.from(it) })
-    }
-
-    @Operation(summary = "공개 여행 일정 목록 (limit)")
-    @GetMapping("/list")
-    fun getPublicItinerariesList(
-        @RequestParam(defaultValue = "10") limit: Int
-    ): ApiResponse<List<ItineraryListResponse>> {
-        val pageable = Pageable.ofSize(limit)
-        val itineraries = itineraryRepository.findPublicItineraries(pageable)
-        return ApiResponse.success(itineraries.content.map { ItineraryListResponse.from(it) })
-    }
+    // MockItineraryController에서 처리: GET /{id}, GET /public, GET /list
 }
 
 data class ItineraryResponse(
