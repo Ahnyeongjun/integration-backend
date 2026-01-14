@@ -21,7 +21,7 @@ class ScheduleController(
     @Operation(summary = "일정 생성")
     @PostMapping
     fun createSchedule(
-        @AuthenticationPrincipal userId: Long,
+        @AuthenticationPrincipal(expression = "userId") userId: Long,
         @RequestBody request: ScheduleCreateRequest
     ): ApiResponse<ScheduleResponse> {
         val schedule = scheduleService.createSchedule(userId, request)
@@ -31,7 +31,7 @@ class ScheduleController(
     @Operation(summary = "월간 일정 조회")
     @GetMapping("/month")
     fun getMonthlySchedules(
-        @AuthenticationPrincipal userId: Long,
+        @AuthenticationPrincipal(expression = "userId") userId: Long,
         @RequestParam year: Int,
         @RequestParam month: Int,
         @RequestParam(required = false) serviceType: ServiceType?
@@ -43,7 +43,7 @@ class ScheduleController(
     @Operation(summary = "주간 일정 조회")
     @GetMapping("/week")
     fun getWeeklySchedules(
-        @AuthenticationPrincipal userId: Long,
+        @AuthenticationPrincipal(expression = "userId") userId: Long,
         @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) startDate: LocalDate,
         @RequestParam(required = false) serviceType: ServiceType?
     ): ApiResponse<List<ScheduleResponse>> {
@@ -54,7 +54,7 @@ class ScheduleController(
     @Operation(summary = "일간 일정 조회")
     @GetMapping("/day")
     fun getDailySchedules(
-        @AuthenticationPrincipal userId: Long,
+        @AuthenticationPrincipal(expression = "userId") userId: Long,
         @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) date: LocalDate,
         @RequestParam(required = false) serviceType: ServiceType?
     ): ApiResponse<List<ScheduleResponse>> {
@@ -65,7 +65,7 @@ class ScheduleController(
     @Operation(summary = "일정 상세")
     @GetMapping("/{id}")
     fun getSchedule(
-        @AuthenticationPrincipal userId: Long,
+        @AuthenticationPrincipal(expression = "userId") userId: Long,
         @PathVariable id: Long
     ): ApiResponse<ScheduleResponse> {
         val schedule = scheduleService.getSchedule(userId, id)
@@ -75,7 +75,7 @@ class ScheduleController(
     @Operation(summary = "다가오는 일정 알림")
     @GetMapping("/notifications")
     fun getNotifications(
-        @AuthenticationPrincipal userId: Long
+        @AuthenticationPrincipal(expression = "userId") userId: Long
     ): ApiResponse<List<ScheduleResponse>> {
         val schedules = scheduleService.getUpcomingSchedules(userId)
         return ApiResponse.success(schedules.map { ScheduleResponse.from(it) })
@@ -84,7 +84,7 @@ class ScheduleController(
     @Operation(summary = "일정 수정 (PUT)")
     @PutMapping("/{id}")
     fun updateSchedulePut(
-        @AuthenticationPrincipal userId: Long,
+        @AuthenticationPrincipal(expression = "userId") userId: Long,
         @PathVariable id: Long,
         @RequestBody request: ScheduleUpdateRequest
     ): ApiResponse<ScheduleResponse> {
@@ -95,7 +95,7 @@ class ScheduleController(
     @Operation(summary = "일정 수정 (PATCH)")
     @PatchMapping("/{id}")
     fun updateSchedulePatch(
-        @AuthenticationPrincipal userId: Long,
+        @AuthenticationPrincipal(expression = "userId") userId: Long,
         @PathVariable id: Long,
         @RequestBody request: ScheduleUpdateRequest
     ): ApiResponse<ScheduleResponse> {
@@ -106,7 +106,7 @@ class ScheduleController(
     @Operation(summary = "일정 삭제")
     @DeleteMapping("/{id}")
     fun deleteSchedule(
-        @AuthenticationPrincipal userId: Long,
+        @AuthenticationPrincipal(expression = "userId") userId: Long,
         @PathVariable id: Long
     ): ApiResponse<Unit> {
         scheduleService.deleteSchedule(userId, id)

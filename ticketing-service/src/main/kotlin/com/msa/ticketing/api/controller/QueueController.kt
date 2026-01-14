@@ -18,7 +18,7 @@ class QueueController(
     @Operation(summary = "대기열 진입")
     @PostMapping("/enter")
     fun enterQueue(
-        @AuthenticationPrincipal userId: Long,
+        @AuthenticationPrincipal(expression = "userId") userId: Long,
         @RequestParam concertId: Long
     ): ApiResponse<QueueTokenResponse> {
         return ApiResponse.success(queueService.enterQueue(userId, concertId))

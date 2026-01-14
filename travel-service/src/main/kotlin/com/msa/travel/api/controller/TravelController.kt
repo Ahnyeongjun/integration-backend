@@ -23,7 +23,7 @@ class ItineraryController(
     @Operation(summary = "내 여행 일정 목록")
     @GetMapping
     fun getMyItineraries(
-        @AuthenticationPrincipal userId: Long,
+        @AuthenticationPrincipal(expression = "userId") userId: Long,
         @PageableDefault(size = 10) pageable: Pageable
     ): ApiResponse<Page<ItineraryResponse>> {
         return ApiResponse.success(itineraryRepository.findByUserId(userId, pageable).map { ItineraryResponse.from(it) })
@@ -32,7 +32,7 @@ class ItineraryController(
     @Operation(summary = "여행 일정 상세")
     @GetMapping("/{id}")
     fun getItinerary(
-        @AuthenticationPrincipal userId: Long,
+        @AuthenticationPrincipal(expression = "userId") userId: Long,
         @PathVariable id: Long
     ): ApiResponse<ItineraryResponse> {
         val itinerary = itineraryRepository.findById(id).orElseThrow { NotFoundException("Itinerary", id) }

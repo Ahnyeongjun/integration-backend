@@ -21,7 +21,7 @@ class WeddingPlanController(
     @Operation(summary = "내 웨딩 플랜 목록")
     @GetMapping
     fun getMyPlans(
-        @AuthenticationPrincipal userId: Long,
+        @AuthenticationPrincipal(expression = "userId") userId: Long,
         @PageableDefault(size = 10) pageable: Pageable
     ): ApiResponse<Page<WeddingPlanResponse>> =
         ApiResponse.success(weddingPlanService.getMyPlans(userId, pageable).map { WeddingPlanResponse.from(it) })
@@ -29,7 +29,7 @@ class WeddingPlanController(
     @Operation(summary = "웨딩 플랜 상세")
     @GetMapping("/{planId}")
     fun getPlan(
-        @AuthenticationPrincipal userId: Long,
+        @AuthenticationPrincipal(expression = "userId") userId: Long,
         @PathVariable planId: Long
     ): ApiResponse<WeddingPlanResponse> =
         ApiResponse.success(WeddingPlanResponse.from(weddingPlanService.getPlan(userId, planId)))
@@ -37,7 +37,7 @@ class WeddingPlanController(
     @Operation(summary = "웨딩 플랜 생성")
     @PostMapping
     fun createPlan(
-        @AuthenticationPrincipal userId: Long,
+        @AuthenticationPrincipal(expression = "userId") userId: Long,
         @RequestBody request: PlanCreateRequest
     ): ApiResponse<WeddingPlanResponse> =
         ApiResponse.success(WeddingPlanResponse.from(weddingPlanService.createPlan(userId, request)))
@@ -45,7 +45,7 @@ class WeddingPlanController(
     @Operation(summary = "웨딩 플랜 수정")
     @PutMapping("/{planId}")
     fun updatePlan(
-        @AuthenticationPrincipal userId: Long,
+        @AuthenticationPrincipal(expression = "userId") userId: Long,
         @PathVariable planId: Long,
         @RequestBody request: PlanUpdateRequest
     ): ApiResponse<WeddingPlanResponse> =
@@ -54,7 +54,7 @@ class WeddingPlanController(
     @Operation(summary = "웨딩 플랜 삭제")
     @DeleteMapping("/{planId}")
     fun deletePlan(
-        @AuthenticationPrincipal userId: Long,
+        @AuthenticationPrincipal(expression = "userId") userId: Long,
         @PathVariable planId: Long
     ): ApiResponse<Unit> {
         weddingPlanService.deletePlan(userId, planId)

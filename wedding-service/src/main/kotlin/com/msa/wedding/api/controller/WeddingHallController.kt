@@ -23,7 +23,7 @@ class WeddingHallController(
     fun getHalls(
         @Parameter(description = "검색 키워드") @RequestParam(required = false) keyword: String?,
         @Parameter(description = "정렬: RECENT, FAVORITE") @RequestParam(required = false) sortType: SortType?,
-        @AuthenticationPrincipal userId: Long?,
+        @AuthenticationPrincipal(expression = "userId") userId: Long?,
         @PageableDefault(size = 20, sort = ["createdAt"], direction = org.springframework.data.domain.Sort.Direction.DESC) pageable: Pageable
     ): ApiResponse<Page<WeddingHallResponse>> {
         return ApiResponse.success(weddingHallService.getHalls(keyword, sortType, userId, pageable))
@@ -34,7 +34,7 @@ class WeddingHallController(
     fun searchHalls(
         @RequestParam keyword: String,
         @Parameter(description = "정렬: RECENT, FAVORITE") @RequestParam(required = false) sortType: SortType?,
-        @AuthenticationPrincipal userId: Long?,
+        @AuthenticationPrincipal(expression = "userId") userId: Long?,
         @PageableDefault(size = 20) pageable: Pageable
     ): ApiResponse<Page<WeddingHallResponse>> {
         return ApiResponse.success(weddingHallService.getHalls(keyword, sortType, userId, pageable))
@@ -44,7 +44,7 @@ class WeddingHallController(
     @GetMapping("/{id}")
     fun getHall(
         @PathVariable id: Long,
-        @AuthenticationPrincipal userId: Long?
+        @AuthenticationPrincipal(expression = "userId") userId: Long?
     ): ApiResponse<WeddingHallResponse> =
         ApiResponse.success(weddingHallService.getHallWithLikeStatus(id, userId))
 
@@ -53,7 +53,7 @@ class WeddingHallController(
     fun getHallsByType(
         @PathVariable hallType: HallType,
         @RequestParam(required = false) sortType: SortType?,
-        @AuthenticationPrincipal userId: Long?,
+        @AuthenticationPrincipal(expression = "userId") userId: Long?,
         @PageableDefault(size = 20, sort = ["createdAt"], direction = org.springframework.data.domain.Sort.Direction.DESC) pageable: Pageable
     ): ApiResponse<Page<WeddingHallResponse>> =
         ApiResponse.success(weddingHallService.getHallsByType(hallType, sortType, userId, pageable))
@@ -63,7 +63,7 @@ class WeddingHallController(
     fun getHallsByCapacity(
         @RequestParam guests: Int,
         @RequestParam(required = false) sortType: SortType?,
-        @AuthenticationPrincipal userId: Long?,
+        @AuthenticationPrincipal(expression = "userId") userId: Long?,
         @PageableDefault(size = 20, sort = ["createdAt"], direction = org.springframework.data.domain.Sort.Direction.DESC) pageable: Pageable
     ): ApiResponse<Page<WeddingHallResponse>> =
         ApiResponse.success(weddingHallService.getHallsByCapacity(guests, sortType, userId, pageable))

@@ -25,7 +25,7 @@ class DressShopController(
         @Parameter(description = "주소/지역 검색") @RequestParam(required = false) address: String?,
         @Parameter(description = "전문분야 검색") @RequestParam(required = false) specialty: String?,
         @Parameter(description = "정렬: RECENT, FAVORITE") @RequestParam(required = false) sortType: SortType?,
-        @AuthenticationPrincipal userId: Long?,
+        @AuthenticationPrincipal(expression = "userId") userId: Long?,
         @PageableDefault(size = 20) pageable: Pageable
     ): ApiResponse<Page<DressShopResponse>> {
         return ApiResponse.success(dressShopService.searchShops(shopName, address, specialty, sortType, userId, pageable))
@@ -35,7 +35,7 @@ class DressShopController(
     @GetMapping("/{id}")
     fun getShop(
         @PathVariable id: Long,
-        @AuthenticationPrincipal userId: Long?
+        @AuthenticationPrincipal(expression = "userId") userId: Long?
     ): ApiResponse<DressShopResponse> =
         ApiResponse.success(dressShopService.getShopWithLikeStatus(id, userId))
 

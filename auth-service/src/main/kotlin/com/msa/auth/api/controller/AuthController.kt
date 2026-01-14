@@ -79,7 +79,7 @@ class AuthController(
     @Operation(summary = "로그아웃", description = "Stateless 방식이므로 클라이언트에서 토큰 삭제 필요")
     @PostMapping("/logout")
     fun logout(
-        @AuthenticationPrincipal userId: Long
+        @AuthenticationPrincipal(expression = "userId") userId: Long
     ): ApiResponse<Unit> {
         authService.logout(userId)
         return ApiResponse.success()
@@ -90,7 +90,7 @@ class AuthController(
     @Operation(summary = "비밀번호 변경 (PUT)", description = "로그인된 사용자의 비밀번호 변경")
     @PutMapping("/password")
     fun changePasswordPut(
-        @AuthenticationPrincipal userId: Long,
+        @AuthenticationPrincipal(expression = "userId") userId: Long,
         @Valid @RequestBody request: ChangePasswordRequest
     ): ApiResponse<MessageResponse> {
         authService.changePassword(userId, request.currentPassword, request.newPassword)
@@ -100,7 +100,7 @@ class AuthController(
     @Operation(summary = "비밀번호 변경 (PATCH)", description = "로그인된 사용자의 비밀번호 변경")
     @PatchMapping("/password")
     fun changePasswordPatch(
-        @AuthenticationPrincipal userId: Long,
+        @AuthenticationPrincipal(expression = "userId") userId: Long,
         @Valid @RequestBody request: ChangePasswordRequest
     ): ApiResponse<MessageResponse> {
         authService.changePassword(userId, request.currentPassword, request.newPassword)
