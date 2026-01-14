@@ -47,6 +47,16 @@ class ItineraryController(
     fun getPublicItineraries(@PageableDefault(size = 10) pageable: Pageable): ApiResponse<Page<ItineraryResponse>> {
         return ApiResponse.success(itineraryRepository.findPublicItineraries(pageable).map { ItineraryResponse.from(it) })
     }
+
+    @Operation(summary = "공개 여행 일정 목록 (limit)")
+    @GetMapping("/list")
+    fun getPublicItinerariesList(
+        @RequestParam(defaultValue = "10") limit: Int
+    ): ApiResponse<List<ItineraryListResponse>> {
+        val pageable = Pageable.ofSize(limit)
+        val itineraries = itineraryRepository.findPublicItineraries(pageable)
+        return ApiResponse.success(itineraries.content.map { ItineraryListResponse.from(it) })
+    }
 }
 
 data class ItineraryResponse(
@@ -62,6 +72,24 @@ data class ItineraryResponse(
         fun from(i: Itinerary) = ItineraryResponse(
             id = i.id, title = i.title, startDate = i.startDate, endDate = i.endDate,
             totalDays = i.getTotalDays(), isPublic = i.isPublic, coverImage = i.coverImage
+        )
+    }
+}
+
+/**
+ * 프론트엔드 레거시 호환용 DTO
+ * 원본 API: { id, title, image_url[] }
+ */
+data class ItineraryListResponse(
+    val id: Long,
+    val title: String,
+    val image_url: List<String>
+) {
+    companion object {
+        fun from(i: Itinerary) = ItineraryListResponse(
+            id = i.id,
+            title = i.title,
+            image_url = if (i.coverImage != null) listOf(i.coverImage!!) else emptyList()
         )
     }
 }
