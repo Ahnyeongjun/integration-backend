@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
+import com.msa.common.security.UserPrincipal
 import org.springframework.data.web.PageableDefault
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
@@ -21,43 +22,43 @@ class WeddingPlanController(
     @Operation(summary = "내 웨딩 플랜 목록")
     @GetMapping
     fun getMyPlans(
-        @AuthenticationPrincipal(expression = "userId") userId: Long,
+        @AuthenticationPrincipal principal: UserPrincipal,
         @PageableDefault(size = 10) pageable: Pageable
     ): ApiResponse<Page<WeddingPlanResponse>> =
-        ApiResponse.success(weddingPlanService.getMyPlans(userId, pageable).map { WeddingPlanResponse.from(it) })
+        ApiResponse.success(weddingPlanService.getMyPlans(principal.userId, pageable).map { WeddingPlanResponse.from(it) })
 
     @Operation(summary = "웨딩 플랜 상세")
     @GetMapping("/{planId}")
     fun getPlan(
-        @AuthenticationPrincipal(expression = "userId") userId: Long,
+        @AuthenticationPrincipal principal: UserPrincipal,
         @PathVariable planId: Long
     ): ApiResponse<WeddingPlanResponse> =
-        ApiResponse.success(WeddingPlanResponse.from(weddingPlanService.getPlan(userId, planId)))
+        ApiResponse.success(WeddingPlanResponse.from(weddingPlanService.getPlan(principal.userId, planId)))
 
     @Operation(summary = "웨딩 플랜 생성")
     @PostMapping
     fun createPlan(
-        @AuthenticationPrincipal(expression = "userId") userId: Long,
+        @AuthenticationPrincipal principal: UserPrincipal,
         @RequestBody request: PlanCreateRequest
     ): ApiResponse<WeddingPlanResponse> =
-        ApiResponse.success(WeddingPlanResponse.from(weddingPlanService.createPlan(userId, request)))
+        ApiResponse.success(WeddingPlanResponse.from(weddingPlanService.createPlan(principal.userId, request)))
 
     @Operation(summary = "웨딩 플랜 수정")
     @PutMapping("/{planId}")
     fun updatePlan(
-        @AuthenticationPrincipal(expression = "userId") userId: Long,
+        @AuthenticationPrincipal principal: UserPrincipal,
         @PathVariable planId: Long,
         @RequestBody request: PlanUpdateRequest
     ): ApiResponse<WeddingPlanResponse> =
-        ApiResponse.success(WeddingPlanResponse.from(weddingPlanService.updatePlan(userId, planId, request)))
+        ApiResponse.success(WeddingPlanResponse.from(weddingPlanService.updatePlan(principal.userId, planId, request)))
 
     @Operation(summary = "웨딩 플랜 삭제")
     @DeleteMapping("/{planId}")
     fun deletePlan(
-        @AuthenticationPrincipal(expression = "userId") userId: Long,
+        @AuthenticationPrincipal principal: UserPrincipal,
         @PathVariable planId: Long
     ): ApiResponse<Unit> {
-        weddingPlanService.deletePlan(userId, planId)
+        weddingPlanService.deletePlan(principal.userId, planId)
         return ApiResponse.success()
     }
 }

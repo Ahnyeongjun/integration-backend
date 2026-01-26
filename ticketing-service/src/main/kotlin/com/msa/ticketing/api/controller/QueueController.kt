@@ -4,6 +4,7 @@ import com.msa.common.response.ApiResponse
 import com.msa.ticketing.application.QueueService
 import com.msa.ticketing.application.QueueTokenResponse
 import io.swagger.v3.oas.annotations.Operation
+import com.msa.common.security.UserPrincipal
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
@@ -18,10 +19,10 @@ class QueueController(
     @Operation(summary = "대기열 진입")
     @PostMapping("/enter")
     fun enterQueue(
-        @AuthenticationPrincipal(expression = "userId") userId: Long,
+        @AuthenticationPrincipal principal: UserPrincipal,
         @RequestParam concertId: Long
     ): ApiResponse<QueueTokenResponse> {
-        return ApiResponse.success(queueService.enterQueue(userId, concertId))
+        return ApiResponse.success(queueService.enterQueue(principal.userId, concertId))
     }
 
     @Operation(summary = "대기열 상태 조회")

@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
+import com.msa.common.security.UserPrincipal
 import org.springframework.data.web.PageableDefault
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
@@ -25,19 +26,19 @@ class DressShopController(
         @Parameter(description = "주소/지역 검색") @RequestParam(required = false) address: String?,
         @Parameter(description = "전문분야 검색") @RequestParam(required = false) specialty: String?,
         @Parameter(description = "정렬: RECENT, FAVORITE") @RequestParam(required = false) sortType: SortType?,
-        @AuthenticationPrincipal(expression = "userId") userId: Long?,
+        @AuthenticationPrincipal principal: UserPrincipal?,
         @PageableDefault(size = 20) pageable: Pageable
     ): ApiResponse<Page<DressShopResponse>> {
-        return ApiResponse.success(dressShopService.searchShops(shopName, address, specialty, sortType, userId, pageable))
+        return ApiResponse.success(dressShopService.searchShops(shopName, address, specialty, sortType, principal?.userId, pageable))
     }
 
     @Operation(summary = "드레스샵 상세", description = "로그인 시 isLiked 포함")
     @GetMapping("/{id}")
     fun getShop(
         @PathVariable id: Long,
-        @AuthenticationPrincipal(expression = "userId") userId: Long?
+        @AuthenticationPrincipal principal: UserPrincipal?
     ): ApiResponse<DressShopResponse> =
-        ApiResponse.success(dressShopService.getShopWithLikeStatus(id, userId))
+        ApiResponse.success(dressShopService.getShopWithLikeStatus(id, principal?.userId))
 
     @Operation(summary = "드레스샵 등록")
     @PostMapping

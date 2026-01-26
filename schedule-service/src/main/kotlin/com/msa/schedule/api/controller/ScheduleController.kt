@@ -6,6 +6,7 @@ import com.msa.schedule.application.*
 import com.msa.schedule.domain.entity.Schedule
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
+import com.msa.common.security.UserPrincipal
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
@@ -21,95 +22,95 @@ class ScheduleController(
     @Operation(summary = "일정 생성")
     @PostMapping
     fun createSchedule(
-        @AuthenticationPrincipal(expression = "userId") userId: Long,
+        @AuthenticationPrincipal principal: UserPrincipal,
         @RequestBody request: ScheduleCreateRequest
     ): ApiResponse<ScheduleResponse> {
-        val schedule = scheduleService.createSchedule(userId, request)
+        val schedule = scheduleService.createSchedule(principal.userId, request)
         return ApiResponse.success(ScheduleResponse.from(schedule))
     }
 
     @Operation(summary = "월간 일정 조회")
     @GetMapping("/month")
     fun getMonthlySchedules(
-        @AuthenticationPrincipal(expression = "userId") userId: Long,
+        @AuthenticationPrincipal principal: UserPrincipal,
         @RequestParam year: Int,
         @RequestParam month: Int,
         @RequestParam(required = false) serviceType: ServiceType?
     ): ApiResponse<List<ScheduleResponse>> {
-        val schedules = scheduleService.getMonthlySchedules(userId, year, month, serviceType)
+        val schedules = scheduleService.getMonthlySchedules(principal.userId, year, month, serviceType)
         return ApiResponse.success(schedules.map { ScheduleResponse.from(it) })
     }
 
     @Operation(summary = "주간 일정 조회")
     @GetMapping("/week")
     fun getWeeklySchedules(
-        @AuthenticationPrincipal(expression = "userId") userId: Long,
+        @AuthenticationPrincipal principal: UserPrincipal,
         @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) startDate: LocalDate,
         @RequestParam(required = false) serviceType: ServiceType?
     ): ApiResponse<List<ScheduleResponse>> {
-        val schedules = scheduleService.getWeeklySchedules(userId, startDate, serviceType)
+        val schedules = scheduleService.getWeeklySchedules(principal.userId, startDate, serviceType)
         return ApiResponse.success(schedules.map { ScheduleResponse.from(it) })
     }
 
     @Operation(summary = "일간 일정 조회")
     @GetMapping("/day")
     fun getDailySchedules(
-        @AuthenticationPrincipal(expression = "userId") userId: Long,
+        @AuthenticationPrincipal principal: UserPrincipal,
         @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) date: LocalDate,
         @RequestParam(required = false) serviceType: ServiceType?
     ): ApiResponse<List<ScheduleResponse>> {
-        val schedules = scheduleService.getDailySchedules(userId, date, serviceType)
+        val schedules = scheduleService.getDailySchedules(principal.userId, date, serviceType)
         return ApiResponse.success(schedules.map { ScheduleResponse.from(it) })
     }
 
     @Operation(summary = "일정 상세")
     @GetMapping("/{id}")
     fun getSchedule(
-        @AuthenticationPrincipal(expression = "userId") userId: Long,
+        @AuthenticationPrincipal principal: UserPrincipal,
         @PathVariable id: Long
     ): ApiResponse<ScheduleResponse> {
-        val schedule = scheduleService.getSchedule(userId, id)
+        val schedule = scheduleService.getSchedule(principal.userId, id)
         return ApiResponse.success(ScheduleResponse.from(schedule))
     }
 
     @Operation(summary = "다가오는 일정 알림")
     @GetMapping("/notifications")
     fun getNotifications(
-        @AuthenticationPrincipal(expression = "userId") userId: Long
+        @AuthenticationPrincipal principal: UserPrincipal
     ): ApiResponse<List<ScheduleResponse>> {
-        val schedules = scheduleService.getUpcomingSchedules(userId)
+        val schedules = scheduleService.getUpcomingSchedules(principal.userId)
         return ApiResponse.success(schedules.map { ScheduleResponse.from(it) })
     }
 
     @Operation(summary = "일정 수정 (PUT)")
     @PutMapping("/{id}")
     fun updateSchedulePut(
-        @AuthenticationPrincipal(expression = "userId") userId: Long,
+        @AuthenticationPrincipal principal: UserPrincipal,
         @PathVariable id: Long,
         @RequestBody request: ScheduleUpdateRequest
     ): ApiResponse<ScheduleResponse> {
-        val schedule = scheduleService.updateSchedule(userId, id, request)
+        val schedule = scheduleService.updateSchedule(principal.userId, id, request)
         return ApiResponse.success(ScheduleResponse.from(schedule))
     }
 
     @Operation(summary = "일정 수정 (PATCH)")
     @PatchMapping("/{id}")
     fun updateSchedulePatch(
-        @AuthenticationPrincipal(expression = "userId") userId: Long,
+        @AuthenticationPrincipal principal: UserPrincipal,
         @PathVariable id: Long,
         @RequestBody request: ScheduleUpdateRequest
     ): ApiResponse<ScheduleResponse> {
-        val schedule = scheduleService.updateSchedule(userId, id, request)
+        val schedule = scheduleService.updateSchedule(principal.userId, id, request)
         return ApiResponse.success(ScheduleResponse.from(schedule))
     }
 
     @Operation(summary = "일정 삭제")
     @DeleteMapping("/{id}")
     fun deleteSchedule(
-        @AuthenticationPrincipal(expression = "userId") userId: Long,
+        @AuthenticationPrincipal principal: UserPrincipal,
         @PathVariable id: Long
     ): ApiResponse<Unit> {
-        scheduleService.deleteSchedule(userId, id)
+        scheduleService.deleteSchedule(principal.userId, id)
         return ApiResponse.success()
     }
 

@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PageableDefault
+import com.msa.common.security.UserPrincipal
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 import java.time.LocalDate
@@ -21,10 +22,10 @@ class ItineraryController(
     @Operation(summary = "내 여행 일정 목록")
     @GetMapping
     fun getMyItineraries(
-        @AuthenticationPrincipal(expression = "userId") userId: Long,
+        @AuthenticationPrincipal principal: UserPrincipal,
         @PageableDefault(size = 10) pageable: Pageable
     ): ApiResponse<Page<ItineraryResponse>> {
-        return ApiResponse.success(itineraryRepository.findByUserId(userId, pageable).map { ItineraryResponse.from(it) })
+        return ApiResponse.success(itineraryRepository.findByUserId(principal.userId, pageable).map { ItineraryResponse.from(it) })
     }
 
     // MockItineraryController에서 처리: GET /{id}, GET /public, GET /list

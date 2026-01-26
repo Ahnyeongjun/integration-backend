@@ -8,6 +8,7 @@ import com.msa.travel.mock.MockTravelData
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.data.domain.Pageable
+import com.msa.common.security.UserPrincipal
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
@@ -137,11 +138,11 @@ class MockItineraryController(
     @Operation(summary = "여행 일정 저장", description = "생성된 여행 일정 저장")
     @PatchMapping
     fun saveItinerary(
-        @AuthenticationPrincipal userId: Long?,
+        @AuthenticationPrincipal principal: UserPrincipal?,
         @RequestBody request: CreateItineraryResponse
     ): ResponseEntity<SaveItineraryResponse> {
         // 실제 DB 저장 로직
-        val effectiveUserId = userId ?: 0L
+        val effectiveUserId = principal?.userId ?: 0L
         val startDate = LocalDate.now()
         val endDate = startDate.plusDays((request.dailyScheduleDtos.size - 1).toLong())
 
@@ -164,7 +165,7 @@ class MockItineraryController(
     @Operation(summary = "여행 일정 삭제", description = "여행 일정 삭제")
     @DeleteMapping("/{id}")
     fun deleteItinerary(
-        @AuthenticationPrincipal userId: Long?,
+        @AuthenticationPrincipal principal: UserPrincipal?,
         @PathVariable id: Long
     ): ResponseEntity<Boolean> {
         tempItineraryStore.remove(id)

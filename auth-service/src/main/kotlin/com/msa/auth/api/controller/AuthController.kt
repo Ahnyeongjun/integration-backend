@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotBlank
+import com.msa.common.security.UserPrincipal
 import jakarta.validation.constraints.Size
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
@@ -79,9 +80,9 @@ class AuthController(
     @Operation(summary = "로그아웃", description = "Stateless 방식이므로 클라이언트에서 토큰 삭제 필요")
     @PostMapping("/logout")
     fun logout(
-        @AuthenticationPrincipal(expression = "userId") userId: Long
+        @AuthenticationPrincipal principal: UserPrincipal
     ): ApiResponse<Unit> {
-        authService.logout(userId)
+        authService.logout(principal.userId)
         return ApiResponse.success()
     }
 
@@ -90,20 +91,20 @@ class AuthController(
     @Operation(summary = "비밀번호 변경 (PUT)", description = "로그인된 사용자의 비밀번호 변경")
     @PutMapping("/password")
     fun changePasswordPut(
-        @AuthenticationPrincipal(expression = "userId") userId: Long,
+        @AuthenticationPrincipal principal: UserPrincipal,
         @Valid @RequestBody request: ChangePasswordRequest
     ): ApiResponse<MessageResponse> {
-        authService.changePassword(userId, request.currentPassword, request.newPassword)
+        authService.changePassword(principal.userId, request.currentPassword, request.newPassword)
         return ApiResponse.success(MessageResponse("비밀번호가 변경되었습니다"))
     }
 
     @Operation(summary = "비밀번호 변경 (PATCH)", description = "로그인된 사용자의 비밀번호 변경")
     @PatchMapping("/password")
     fun changePasswordPatch(
-        @AuthenticationPrincipal(expression = "userId") userId: Long,
+        @AuthenticationPrincipal principal: UserPrincipal,
         @Valid @RequestBody request: ChangePasswordRequest
     ): ApiResponse<MessageResponse> {
-        authService.changePassword(userId, request.currentPassword, request.newPassword)
+        authService.changePassword(principal.userId, request.currentPassword, request.newPassword)
         return ApiResponse.success(MessageResponse("비밀번호가 변경되었습니다"))
     }
 
