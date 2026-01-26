@@ -5,7 +5,7 @@ from contextlib import asynccontextmanager
 
 from src.database import init_db
 from src.config import settings
-from src.api.routes import dress_recommend, health, venue_recommend
+from src.api.routes import dress_recommend, venue_recommend
 
 
 @asynccontextmanager
@@ -41,7 +41,6 @@ app.add_middleware(
 # Include routers
 app.include_router(dress_recommend.router)
 app.include_router(venue_recommend.router)
-app.include_router(health.router)
 
 
 if __name__ == "__main__":
