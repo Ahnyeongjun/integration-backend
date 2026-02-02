@@ -26,9 +26,47 @@ abstract class BaseSecurityConfig {
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .formLogin { it.disable() }
             .httpBasic { it.disable() }
+            .anonymous { it.disable() }
             .addFilterBefore(
                 HeaderAuthenticationFilter(),
                 UsernamePasswordAuthenticationFilter::class.java
+            )
+    }
+
+    /**
+     * 내부 API 토큰 검증 필터 포함 Security 설정
+     */
+    protected fun configureWithInternalApi(http: HttpSecurity, internalToken: String): HttpSecurity {
+        return configure(http)
+            .addFilterBefore(
+                InternalApiFilter(internalToken),
+                HeaderAuthenticationFilter::class.java
+            )
+    }
+
+    /**
+     * OAuth 미완료 사용자 접근 제한 필터 포함 Security 설정
+     */
+    protected fun configureWithSignupCheck(http: HttpSecurity): HttpSecurity {
+        return configure(http)
+            .addFilterAfter(
+                SignupCompletedFilter(),
+                HeaderAuthenticationFilter::class.java
+            )
+    }
+
+    /**
+     * 모든 필터 포함 Security 설정 (내부 API + 회원가입 체크)
+     */
+    protected fun configureWithAllFilters(http: HttpSecurity, internalToken: String): HttpSecurity {
+        return configure(http)
+            .addFilterBefore(
+                InternalApiFilter(internalToken),
+                HeaderAuthenticationFilter::class.java
+            )
+            .addFilterAfter(
+                SignupCompletedFilter(),
+                HeaderAuthenticationFilter::class.java
             )
     }
 }

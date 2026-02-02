@@ -32,8 +32,9 @@ class SecurityConfig(
                     .requestMatchers(*PublicPaths.AUTH).permitAll()
                     .requestMatchers(*PublicPaths.SWAGGER).permitAll()
                     .requestMatchers(*PublicPaths.ACTUATOR).permitAll()
-                    // 로그아웃은 인증 필요
+                    // 인증 필요 API
                     .requestMatchers("/api/v1/auth/logout").authenticated()
+                    .requestMatchers("/api/v1/auth/password").authenticated()
                     .anyRequest().permitAll()
             }
             .build()

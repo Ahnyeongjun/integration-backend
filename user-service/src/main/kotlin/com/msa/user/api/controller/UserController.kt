@@ -35,19 +35,9 @@ class UserController(
         return ApiResponse.success(UserResponse.from(user))
     }
 
-    @Operation(summary = "프로필 수정 (PUT)")
-    @PutMapping("/me")
-    fun updateProfilePut(
-        @AuthenticationPrincipal principal: UserPrincipal,
-        @RequestBody request: ProfileUpdateRequest
-    ): ApiResponse<UserResponse> {
-        val user = userService.updateProfile(principal.userId, request)
-        return ApiResponse.success(UserResponse.from(user))
-    }
-
-    @Operation(summary = "프로필 수정 (PATCH)")
+    @Operation(summary = "프로필 수정")
     @PatchMapping("/me")
-    fun updateProfilePatch(
+    fun updateProfile(
         @AuthenticationPrincipal principal: UserPrincipal,
         @RequestBody request: ProfileUpdateRequest
     ): ApiResponse<UserResponse> {

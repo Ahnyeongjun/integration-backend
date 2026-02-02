@@ -37,6 +37,8 @@ class ScheduleController(
         @RequestParam month: Int,
         @RequestParam(required = false) serviceType: ServiceType?
     ): ApiResponse<List<ScheduleResponse>> {
+        require(month in 1..12) { "month는 1~12 사이여야 합니다" }
+        require(year in 1900..2100) { "year는 1900~2100 사이여야 합니다" }
         val schedules = scheduleService.getMonthlySchedules(principal.userId, year, month, serviceType)
         return ApiResponse.success(schedules.map { ScheduleResponse.from(it) })
     }
@@ -69,6 +71,7 @@ class ScheduleController(
         @AuthenticationPrincipal principal: UserPrincipal,
         @PathVariable id: Long
     ): ApiResponse<ScheduleResponse> {
+        require(id > 0) { "id는 양수여야 합니다" }
         val schedule = scheduleService.getSchedule(principal.userId, id)
         return ApiResponse.success(ScheduleResponse.from(schedule))
     }
@@ -82,24 +85,14 @@ class ScheduleController(
         return ApiResponse.success(schedules.map { ScheduleResponse.from(it) })
     }
 
-    @Operation(summary = "일정 수정 (PUT)")
-    @PutMapping("/{id}")
-    fun updateSchedulePut(
-        @AuthenticationPrincipal principal: UserPrincipal,
-        @PathVariable id: Long,
-        @RequestBody request: ScheduleUpdateRequest
-    ): ApiResponse<ScheduleResponse> {
-        val schedule = scheduleService.updateSchedule(principal.userId, id, request)
-        return ApiResponse.success(ScheduleResponse.from(schedule))
-    }
-
-    @Operation(summary = "일정 수정 (PATCH)")
+    @Operation(summary = "일정 수정")
     @PatchMapping("/{id}")
-    fun updateSchedulePatch(
+    fun updateSchedule(
         @AuthenticationPrincipal principal: UserPrincipal,
         @PathVariable id: Long,
         @RequestBody request: ScheduleUpdateRequest
     ): ApiResponse<ScheduleResponse> {
+        require(id > 0) { "id는 양수여야 합니다" }
         val schedule = scheduleService.updateSchedule(principal.userId, id, request)
         return ApiResponse.success(ScheduleResponse.from(schedule))
     }
@@ -110,6 +103,7 @@ class ScheduleController(
         @AuthenticationPrincipal principal: UserPrincipal,
         @PathVariable id: Long
     ): ApiResponse<Unit> {
+        require(id > 0) { "id는 양수여야 합니다" }
         scheduleService.deleteSchedule(principal.userId, id)
         return ApiResponse.success()
     }

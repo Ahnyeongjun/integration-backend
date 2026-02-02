@@ -22,9 +22,9 @@ class FestivalController(
     @Operation(summary = "축제 상세")
     @GetMapping("/{id}")
     fun getFestival(@PathVariable id: Long): ApiResponse<FestivalResponse> {
+        require(id > 0) { "id는 양수여야 합니다" }
+        festivalRepository.incrementViewCount(id)
         val festival = festivalRepository.findById(id).orElseThrow { NotFoundException("Festival", id) }
-        festival.viewCount++
-        festivalRepository.save(festival)
         return ApiResponse.success(FestivalResponse.from(festival))
     }
 

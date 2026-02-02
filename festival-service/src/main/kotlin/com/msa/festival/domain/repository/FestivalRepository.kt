@@ -5,7 +5,9 @@ import com.msa.festival.domain.entity.FestivalCategory
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
+import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDate
 
 interface FestivalRepository : JpaRepository<Festival, Long> {
@@ -17,4 +19,9 @@ interface FestivalRepository : JpaRepository<Festival, Long> {
     fun searchByKeyword(keyword: String, pageable: Pageable): Page<Festival>
     @Query("SELECT f FROM Festival f ORDER BY f.viewCount DESC")
     fun findPopular(pageable: Pageable): Page<Festival>
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE Festival f SET f.viewCount = f.viewCount + 1 WHERE f.id = :id")
+    fun incrementViewCount(id: Long): Int
 }

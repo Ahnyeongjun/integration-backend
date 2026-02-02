@@ -88,19 +88,9 @@ class AuthController(
 
     // ========== 비밀번호 변경 API ==========
 
-    @Operation(summary = "비밀번호 변경 (PUT)", description = "로그인된 사용자의 비밀번호 변경")
-    @PutMapping("/password")
-    fun changePasswordPut(
-        @AuthenticationPrincipal principal: UserPrincipal,
-        @Valid @RequestBody request: ChangePasswordRequest
-    ): ApiResponse<MessageResponse> {
-        authService.changePassword(principal.userId, request.currentPassword, request.newPassword)
-        return ApiResponse.success(MessageResponse("비밀번호가 변경되었습니다"))
-    }
-
-    @Operation(summary = "비밀번호 변경 (PATCH)", description = "로그인된 사용자의 비밀번호 변경")
+    @Operation(summary = "비밀번호 변경", description = "로그인된 사용자의 비밀번호 변경")
     @PatchMapping("/password")
-    fun changePasswordPatch(
+    fun changePassword(
         @AuthenticationPrincipal principal: UserPrincipal,
         @Valid @RequestBody request: ChangePasswordRequest
     ): ApiResponse<MessageResponse> {

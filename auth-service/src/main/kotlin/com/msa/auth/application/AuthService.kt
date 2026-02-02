@@ -103,8 +103,9 @@ class AuthService(
             // 기존 OAuth 계정 존재
             if (existingAccount.isLinkedToUser()) {
                 // User와 연결됨 → 정상 로그인
+                val userId = requireNotNull(existingAccount.userId) { "연결된 User ID가 없습니다" }
                 generateTokens(
-                    userId = existingAccount.userId!!,
+                    userId = userId,
                     email = existingAccount.providerEmail ?: "",
                     nickname = existingAccount.providerNickname ?: "",
                     signupCompleted = true
