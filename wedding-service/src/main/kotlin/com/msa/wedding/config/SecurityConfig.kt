@@ -31,16 +31,20 @@ class SecurityConfig(
                     .requestMatchers(*PublicPaths.SWAGGER).permitAll()
                     .requestMatchers(*PublicPaths.ACTUATOR).permitAll()
 
-                    // 내부 서비스 API
-                    .requestMatchers("/api/v1/weddings/internal/**").permitAll()
-
                     // 공개 API - 조회
-                    .requestMatchers(HttpMethod.GET, "/api/v1/weddings/**").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/v1/wedding-halls/**").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/v1/halls/**").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/v1/plans/**").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/v1/dresses/**").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/v1/dress-shops/**").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/v1/makeup-shops/**").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/v1/recommendations/**").permitAll()
 
                     // 인증 필수 API - 생성, 수정, 삭제
-                    .requestMatchers(HttpMethod.POST, "/api/v1/weddings/**").authenticated()
-                    .requestMatchers(HttpMethod.PATCH, "/api/v1/weddings/**").authenticated()
-                    .requestMatchers(HttpMethod.DELETE, "/api/v1/weddings/**").authenticated()
+                    .requestMatchers(HttpMethod.POST, "/api/v1/**").authenticated()
+                    .requestMatchers(HttpMethod.PUT, "/api/v1/**").authenticated()
+                    .requestMatchers(HttpMethod.PATCH, "/api/v1/**").authenticated()
+                    .requestMatchers(HttpMethod.DELETE, "/api/v1/**").authenticated()
 
                     .anyRequest().authenticated()
             }

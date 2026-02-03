@@ -31,16 +31,16 @@ class SecurityConfig(
                     .requestMatchers(*PublicPaths.SWAGGER).permitAll()
                     .requestMatchers(*PublicPaths.ACTUATOR).permitAll()
 
-                    // 내부 서비스 API
-                    .requestMatchers("/api/v1/ticketing/internal/**").permitAll()
-
                     // 공개 API - 조회
-                    .requestMatchers(HttpMethod.GET, "/api/v1/ticketing/**").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/v1/queue/**").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/v1/concerts/**").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/v1/reservations/**").permitAll()
 
                     // 인증 필수 API - 예매
-                    .requestMatchers(HttpMethod.POST, "/api/v1/ticketing/**").authenticated()
-                    .requestMatchers(HttpMethod.PATCH, "/api/v1/ticketing/**").authenticated()
-                    .requestMatchers(HttpMethod.DELETE, "/api/v1/ticketing/**").authenticated()
+                    .requestMatchers(HttpMethod.POST, "/api/v1/**").authenticated()
+                    .requestMatchers(HttpMethod.PUT, "/api/v1/**").authenticated()
+                    .requestMatchers(HttpMethod.PATCH, "/api/v1/**").authenticated()
+                    .requestMatchers(HttpMethod.DELETE, "/api/v1/**").authenticated()
 
                     .anyRequest().authenticated()
             }
